@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" href="../static/css/admin.css">
+
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+
+            <i class="fas fa-chart-line"></i>
+
+            <h2>IPMS</h2>
+
+        </div>
+
+        <ul>
+
+            <li class="active">
+                <i class="fas fa-home"></i>
+                Dashboard
+            </li>
+
+            <li onclick="goToUsers()">
+                <i class="fas fa-users"></i>
+                Users
+            </li>
+
+            <li onclick="goToPortfolio()">
+                <i class="fas fa-wallet"></i>
+                Portfolios
+            </li>
+
+            <li onclick="goToAssets()">
+                <i class="fas fa-coins"></i>
+                Assets
+            </li>
+
+            <li onclick="goToTransactions()">
+                <i class="fas fa-money-bill-transfer"></i>
+                Transactions
+            </li>
+
+            <li onclick="goToAnalytics()">
+                <i class="fas fa-chart-pie"></i>
+                Analytics
+            </li>
+
+            <li onclick="goToProfile()">
+                <i class="fas fa-user"></i>
+                Profile
+            </li>
+
+            <li onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="main-content">
+
+        <div class="top-bar">
+
+            <div>
+
+                <h1>
+                    Welcome,
+                    <span id="username"></span>
+                </h1>
+
+                <p>
+                    Investment Portfolio Management System
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- Cards -->
+
+        <div class="cards">
+
+            <div class="card">
+
+                <i class="fas fa-users"></i>
+
+                <h3>Total Users</h3>
+
+                <span id="userCount">
+                    0
+                </span>
+
+            </div>
+
+            <div class="card">
+
+                <i class="fas fa-wallet"></i>
+
+                <h3>Portfolios</h3>
+
+                <span id="portfolioCount">
+                    0
+                </span>
+
+            </div>
+
+            <div class="card">
+
+                <i class="fas fa-coins"></i>
+
+                <h3>Assets</h3>
+
+                <span id="assetCount">
+                    0
+                </span>
+
+            </div>
+
+            <div class="card">
+
+                <i class="fas fa-money-bill-transfer"></i>
+
+                <h3>Transactions</h3>
+
+                <span id="transactionCount">
+                    0
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- Quick Actions -->
+
+        <div class="actions">
+
+            <h2>Quick Actions</h2>
+
+            <div class="action-buttons">
+
+                <button onclick="goToUsers()">
+                    Manage Users
+                </button>
+
+                <button onclick="goToPortfolio()">
+                    Manage Portfolios
+                </button>
+
+                <button onclick="goToAssets()">
+                    Manage Assets
+                </button>
+
+                <button onclick="goToAnalytics()">
+                    View Analytics
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="../static/js/admin.js"></script>
+
+</body>
+</html>

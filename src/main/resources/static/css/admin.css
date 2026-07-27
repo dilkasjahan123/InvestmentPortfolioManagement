@@ -1,0 +1,156 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f7fc;
+}
+
+.container{
+    display:flex;
+    min-height:100vh;
+}
+
+.sidebar{
+    width:250px;
+    background:#0f172a;
+    color:white;
+    padding:20px;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:40px;
+}
+
+.logo i{
+    font-size:28px;
+    color:#38bdf8;
+}
+
+.sidebar ul{
+    list-style:none;
+}
+
+.sidebar ul li{
+    padding:15px;
+    margin-bottom:10px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.sidebar ul li:hover,
+.active{
+    background:#2563eb;
+}
+
+.sidebar ul li i{
+    margin-right:10px;
+}
+
+.main-content{
+    flex:1;
+    padding:30px;
+}
+
+.top-bar{
+    margin-bottom:30px;
+}
+
+.top-bar h1{
+    color:#1e293b;
+}
+
+.top-bar p{
+    color:#64748b;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:
+            repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    text-align:center;
+
+    box-shadow:
+            0 5px 15px rgba(0,0,0,.08);
+}
+
+.card i{
+    font-size:35px;
+    color:#2563eb;
+    margin-bottom:15px;
+}
+
+.card h3{
+    color:#334155;
+    margin-bottom:10px;
+}
+
+.card span{
+    font-size:28px;
+    font-weight:700;
+    color:#2563eb;
+}
+
+.actions{
+    margin-top:40px;
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    box-shadow:
+            0 5px 15px rgba(0,0,0,.08);
+}
+
+.actions h2{
+    margin-bottom:20px;
+}
+
+.action-buttons{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.action-buttons button{
+
+    border:none;
+
+    padding:12px 20px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #06b6d4
+            );
+
+    color:white;
+
+    font-weight:600;
+}
+
+.action-buttons button:hover{
+    opacity:.9;
+}

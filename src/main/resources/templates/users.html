@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>User Management</title>
+    <link rel="stylesheet" href="../static/css/users.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+
+    <div class="header">
+
+        <div class="header-left">
+
+            <h1>
+
+                <i class="fas fa-users"></i>
+
+                User Management
+
+            </h1>
+
+            <p>
+                Manage investors and advisors
+            </p>
+
+        </div>
+
+        <button class="refresh-btn"
+                onclick="loadUsers()">
+
+            <i class="fas fa-rotate-right"></i>
+
+            Refresh
+
+        </button>
+
+    </div>
+
+    <!-- Statistics -->
+
+    <div class="stats">
+
+        <div class="stat-card advisor-card">
+
+            <i class="fas fa-user-tie"></i>
+
+            <div>
+
+                <h3>Total Advisors</h3>
+
+                <span id="advisorCount">0</span>
+
+            </div>
+
+        </div>
+
+        <div class="stat-card investor-card">
+
+            <i class="fas fa-chart-line"></i>
+
+            <div>
+
+                <h3>Total Investors</h3>
+
+                <span id="investorCount">0</span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Search Box -->
+
+    <div class="search-box">
+
+        <input type="text"
+               id="searchUser"
+               placeholder="Search username..."
+               onkeyup="searchUser()">
+
+    </div>
+
+    <!-- Table -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Username</th>
+
+                <th>Email</th>
+
+                <th>Role</th>
+
+                <th>Action</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody id="userTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script src="../static/js/users.js"></script>
+
+</body>
+</html>

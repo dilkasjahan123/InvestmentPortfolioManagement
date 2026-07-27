@@ -1,0 +1,159 @@
+body{
+    background:#f8fafc;
+    font-family:'Segoe UI',sans-serif;
+}
+
+.custom-navbar{
+    background:#0f172a;
+}
+
+.hero-section{
+    background:white;
+    padding:35px 0;
+    border-bottom:1px solid #e2e8f0;
+}
+
+.hero-section h1{
+    color:#0f172a;
+    font-weight:700;
+}
+
+.hero-section p{
+    color:#64748b;
+}
+
+.section-header{
+
+    background:#ffffff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:12px;
+
+    padding:12px 16px;
+
+    margin-bottom:20px;
+
+    color:#0f172a;
+
+    font-size:20px;
+
+    font-weight:600;
+}
+
+.asset-card{
+    min-height:400px;
+    border:none;
+    border-radius:18px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    transition:.3s;
+    overflow:hidden;
+}
+
+.asset-card:hover{
+    transform:translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+
+}
+
+.asset-type{
+    font-weight:700;
+    color:#0f172a;
+}
+
+.asset-label{
+    color:#64748b;
+    font-size:14px;
+}
+
+.asset-value{
+    color:#2563eb;
+    font-weight:600;
+}
+
+.action-buttons{
+    margin-top:20px;
+}
+.summary-card{
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.summary-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+
+}
+
+.assets-card{
+    background: #0f172a;
+    color: white;
+}
+
+.quantity-card{
+    background: #334155;
+    color: white;
+}
+
+.profit-card{
+    background: linear-gradient(
+        135deg,
+        #14532d,
+        #166534
+    );
+    color: white;
+}
+.asset-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+}
+
+.asset-name{
+    font-size:1.15rem;
+    font-weight:700;
+    color:#0f172a;
+    margin:0;
+}
+
+.asset-card hr{
+    margin:12px 0;
+    border-color:#e2e8f0;
+}
+
+.asset-card p{
+    margin-bottom:12px;
+}
+
+.badge{
+    font-size:0.75rem;
+    padding:8px 12px;
+}
+
+.asset-card .text-success{
+    font-weight:700;
+}
+
+.asset-card .text-danger{
+    font-weight:700;
+}
+.action-buttons{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
+}
+
+.action-buttons .btn{
+    flex:1;
+}
+#assetSearch{
+    height:50px;
+    font-size:16px;
+}
+
+.input-group-text{
+    background:white;
+}

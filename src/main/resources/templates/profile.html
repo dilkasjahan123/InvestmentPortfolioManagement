@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Profile</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="../static/css/profile.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+
+            <i class="fas fa-chart-line"></i>
+
+            <h2>IPMS</h2>
+
+        </div>
+
+        <ul>
+
+            <li onclick="goToDashboard()">
+                <i class="fas fa-home"></i>
+                Dashboard
+            </li>
+
+            <li id="usersMenu" onclick="goToUsers()">
+                <i class="fas fa-users"></i>
+                Users
+            </li>
+
+            <li onclick="goToPortfolio()">
+                <i class="fas fa-wallet"></i>
+                Portfolios
+            </li>
+
+            <li onclick="goToAssets()">
+                <i class="fas fa-coins"></i>
+                Assets
+            </li>
+
+            <li id="transactionsMenu" onclick="goToTransactions()">
+                <i class="fas fa-money-bill-transfer"></i>
+                Transactions
+            </li>
+
+            <li onclick="goToAnalytics()">
+                <i class="fas fa-chart-pie"></i>
+                Analytics
+            </li>
+
+            <li class="active">
+                <i class="fas fa-user"></i>
+                Profile
+            </li>
+
+            <li onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="main-content">
+
+        <div class="profile-card">
+
+            <div class="profile-header">
+
+                <i class="fas fa-user-circle"></i>
+
+                <h2 id="profileName">
+                    Profile
+                </h2>
+
+            </div>
+
+            <div class="profile-form">
+
+                <label>
+                    Username
+                </label>
+
+                <input type="text"
+                       id="username">
+
+                <label>
+                    Email
+                </label>
+
+                <input type="email"
+                       id="email">
+
+                <label>
+                    Role
+                </label>
+
+                <div id="role"
+                     class="role-badge">
+                </div>
+
+                <hr>
+
+                <hr>
+
+                <button
+                        type="button"
+                        class="password-btn"
+                        onclick="togglePasswordSection()">
+
+                    <i class="fas fa-key"></i>
+                    Change Password
+
+                </button>
+
+                <div id="passwordSection"
+                     class="password-section">
+
+                    <div class="password-field">
+
+                        <input
+                                type="password"
+                                id="currentPassword"
+                                placeholder="Current Password">
+
+                        <i class="fas fa-eye"
+                           onclick="togglePassword('currentPassword', this)"></i>
+
+                    </div>
+
+                    <div class="password-field">
+
+                        <input
+                                type="password"
+                                id="newPassword"
+                                placeholder="New Password">
+
+                        <i class="fas fa-eye"
+                           onclick="togglePassword('newPassword', this)"></i>
+
+                    </div>
+
+                    <div class="password-field">
+
+                        <input
+                                type="password"
+                                id="confirmPassword"
+                                placeholder="Confirm Password">
+
+                        <i class="fas fa-eye"
+                           onclick="togglePassword('confirmPassword', this)"></i>
+
+                    </div>
+
+                </div>
+                <button onclick="updateProfile()">
+
+                    <i class="fas fa-save"></i>
+
+                    Update Profile
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="../static/js/profile.js"></script>
+
+</body>
+
+</html>

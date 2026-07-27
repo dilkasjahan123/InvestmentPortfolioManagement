@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Portfolio Management</title>
+
+    <link rel="stylesheet"
+          href="../static/css/portfolio.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div>
+
+            <h1>
+                <i class="fas fa-wallet"></i>
+                Portfolio Management
+            </h1>
+
+            <p>
+                Manage investment portfolios
+            </p>
+
+        </div>
+
+        <button
+                id="addPortfolioBtn"
+                class="create-btn"
+                onclick="openModal()">
+
+            + Create Portfolio
+
+        </button>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="stat-card">
+            <h3 id="totalPortfolioCount">0</h3>
+            <p>Total Portfolios</p>
+        </div>
+
+        <div class="stat-card high-card">
+            <h3 id="highRiskCount">0</h3>
+            <p>High Risk</p>
+        </div>
+
+        <div class="stat-card medium-card">
+            <h3 id="mediumRiskCount">0</h3>
+            <p>Medium Risk</p>
+        </div>
+
+        <div class="stat-card low-card">
+            <h3 id="lowRiskCount">0</h3>
+            <p>Low Risk</p>
+        </div>
+
+    </div>
+    <div class="search-section">
+
+        <i class="fas fa-search"></i>
+
+        <input
+                type="text"
+                id="searchPortfolio"
+                placeholder="Search Portfolio..."
+                onkeyup="searchPortfolio()">
+
+    </div>
+
+    <div id="portfolioContainer"
+         class="portfolio-grid">
+
+    </div>
+    <div id="emptyState"></div>
+
+</div>
+
+
+<!-- Modal -->
+
+<div id="portfolioModal"
+     class="modal">
+
+    <div class="modal-content">
+
+        <h2>Portfolio Details</h2>
+
+        <form id="portfolioForm">
+
+            <input type="text"
+                   id="portfolioName"
+                   placeholder="Portfolio Name"
+                   required>
+
+            <select id="investorId"
+                    required>
+
+                <option value="">
+                    Select Investor
+                </option>
+
+            </select>
+
+            <select id="riskLevel"
+                    required>
+
+                <option value="">
+                    Select Risk Level
+                </option>
+
+                <option value="LOW">
+                    LOW
+                </option>
+
+                <option value="MEDIUM">
+                    MEDIUM
+                </option>
+
+                <option value="HIGH">
+                    HIGH
+                </option>
+
+            </select>
+
+            <div class="modal-buttons">
+
+                <button type="submit">
+                    Save
+                </button>
+
+                <button
+                        type="button"
+                        onclick="closeModal()">
+
+                    Cancel
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="../static/js/portfolio.js"></script>
+
+</body>
+</html>

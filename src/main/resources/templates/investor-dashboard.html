@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Investor Dashboard</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="../static/css/investor-dashboard.css">
+
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="sidebar">
+
+        <div class="logo">
+
+            <i class="fas fa-chart-line"></i>
+
+            <h2>IPMS</h2>
+
+        </div>
+
+        <ul>
+
+            <li class="active">
+
+                <i class="fas fa-home"></i>
+
+                Dashboard
+
+            </li>
+
+            <li onclick="goToPortfolio()">
+
+                <i class="fas fa-wallet"></i>
+
+                My Portfolios
+
+            </li>
+
+            <li onclick="goToAssets()">
+
+                <i class="fas fa-coins"></i>
+
+                My Assets
+
+            </li>
+
+            <li onclick="goToTransactions()">
+
+                <i class="fas fa-money-bill-transfer"></i>
+
+                My Transactions
+
+            </li>
+
+            <li onclick="goToAnalytics()">
+
+                <i class="fas fa-chart-pie"></i>
+
+                Portfolio Analytics
+
+            </li>
+
+            <li onclick="goToProfile()">
+
+                <i class="fas fa-user"></i>
+
+                Profile
+
+            </li>
+
+            <li onclick="logout()">
+
+                <i class="fas fa-sign-out-alt"></i>
+
+                Logout
+
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div class="main-content">
+
+        <div class="welcome">
+
+            <h1>
+                Welcome,
+                <span id="investorName"></span>
+            </h1>
+
+            <p>
+                Monitor your portfolios and investments.
+            </p>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <i class="fas fa-wallet"></i>
+
+                <h3>My Portfolios</h3>
+
+                <span id="portfolioCount">0</span>
+
+            </div>
+
+            <div class="card">
+
+                <i class="fas fa-coins"></i>
+
+                <h3>My Assets</h3>
+
+                <span id="assetCount">0</span>
+
+            </div>
+
+            <div class="card">
+
+                <i class="fas fa-money-bill"></i>
+
+                <h3>Total Investment</h3>
+
+                <span id="investmentValue">₹0</span>
+
+            </div>
+
+            <div class="card">
+
+                <i class="fas fa-chart-line"></i>
+
+                <h3>Current Value</h3>
+
+                <span id="currentValue">₹0</span>
+
+            </div>
+
+        </div>
+
+        <h2 class="section-title">
+
+            My Portfolios
+
+        </h2>
+
+        <div id="portfolioContainer"
+             class="portfolio-grid">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="../static/js/investor-dashboard.js"></script>
+
+</body>
+
+</html>
