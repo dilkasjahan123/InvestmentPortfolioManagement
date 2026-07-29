@@ -1,178 +1,705 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Investor Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <link rel="stylesheet" href="../static/css/investor-dashboard.css">
-
-
+    <link rel="stylesheet"
+          th:href="@{/css/investor-dashboard.css}">
 </head>
 
 <body>
 
-<div class="container">
+<div class="dashboard-app">
 
-    <div class="sidebar">
+    <aside class="dashboard-sidebar"
+           id="dashboardSidebar">
 
-        <div class="logo">
+        <a th:href="@{/investor}"
+           class="sidebar-brand">
+            <span class="brand-mark">
+                <i class="fa-solid fa-chart-pie"></i>
+            </span>
 
-            <i class="fas fa-chart-line"></i>
+            <span class="brand-copy">
+                <strong>InvestFlow</strong>
+                <small>Investor workspace</small>
+            </span>
+        </a>
 
-            <h2>IPMS</h2>
-
+        <div class="sidebar-section-label">
+            Workspace
         </div>
 
-        <ul>
+        <nav class="sidebar-navigation"
+             aria-label="Investor navigation">
 
-            <li class="active">
+            <a th:href="@{/investor}"
+               class="active">
+                <span class="nav-icon">
+                    <i class="fa-solid fa-house"></i>
+                </span>
+                <span>Overview</span>
+            </a>
 
-                <i class="fas fa-home"></i>
+            <a th:href="@{/portfolios}">
+                <span class="nav-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </span>
+                <span>My Portfolios</span>
+            </a>
 
-                Dashboard
+            <a th:href="@{/assets}">
+                <span class="nav-icon">
+                    <i class="fa-solid fa-cubes"></i>
+                </span>
+                <span>My Assets</span>
+            </a>
 
-            </li>
+            <a th:href="@{/transactions}">
+                <span class="nav-icon">
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                </span>
+                <span>Transactions</span>
+            </a>
 
-            <li onclick="goToPortfolio()">
+            <a th:href="@{/investor/analytics}">
+                <span class="nav-icon">
+                    <i class="fa-solid fa-chart-column"></i>
+                </span>
+                <span>Analytics</span>
+            </a>
 
-                <i class="fas fa-wallet"></i>
+        </nav>
 
-                My Portfolios
+        <div class="sidebar-section-label account-label">
+            Account
+        </div>
 
-            </li>
+        <nav class="sidebar-navigation"
+             aria-label="Account navigation">
+            <a th:href="@{/profile}">
+                <span class="nav-icon">
+                    <i class="fa-regular fa-user"></i>
+                </span>
+                <span>My Profile</span>
+            </a>
+        </nav>
 
-            <li onclick="goToAssets()">
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <div class="sidebar-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
 
-                <i class="fas fa-coins"></i>
+                <div>
+                    <strong th:text="${user.username}">
+                        Investor
+                    </strong>
+                    <span th:text="${user.role}">
+                        INVESTOR
+                    </span>
+                </div>
+            </div>
 
-                My Assets
+            <form th:action="@{/logout}"
+                  method="post">
+                <button type="submit"
+                        class="logout-button">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
 
-            </li>
+    </aside>
 
-            <li onclick="goToTransactions()">
-
-                <i class="fas fa-money-bill-transfer"></i>
-
-                My Transactions
-
-            </li>
-
-            <li onclick="goToAnalytics()">
-
-                <i class="fas fa-chart-pie"></i>
-
-                Portfolio Analytics
-
-            </li>
-
-            <li onclick="goToProfile()">
-
-                <i class="fas fa-user"></i>
-
-                Profile
-
-            </li>
-
-            <li onclick="logout()">
-
-                <i class="fas fa-sign-out-alt"></i>
-
-                Logout
-
-            </li>
-
-        </ul>
-
+    <div class="sidebar-overlay"
+         id="sidebarOverlay">
     </div>
 
-    <div class="main-content">
+    <main class="dashboard-main">
 
-        <div class="welcome">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button type="button"
+                        class="menu-button"
+                        id="menuButton"
+                        aria-label="Open navigation"
+                        aria-controls="dashboardSidebar"
+                        aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
 
-            <h1>
-                Welcome,
-                <span id="investorName"></span>
-            </h1>
+                <div>
+                    <span>Investor dashboard</span>
+                    <strong th:text="${today}">
+                        Wednesday, 29 July 2026
+                    </strong>
+                </div>
+            </div>
 
-            <p>
-                Monitor your portfolios and investments.
-            </p>
+            <div class="topbar-actions">
+                <a th:href="@{/profile}"
+                   class="topbar-profile">
+                    <div class="topbar-avatar">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div>
+                        <strong th:text="${user.username}">
+                            Investor
+                        </strong>
+                        <span>View profile</span>
+                    </div>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+
+            <section class="welcome-panel">
+                <div class="welcome-copy">
+                    <span class="welcome-badge">
+                        <i class="fa-solid fa-sparkles"></i>
+                        Portfolio overview
+                    </span>
+
+                    <h1>
+                        Welcome back,
+                        <span th:text="${user.username}">
+                            Investor
+                        </span>
+                    </h1>
+
+                    <p>
+                        Your investments are organized in one place.
+                        Review performance and keep track of every portfolio.
+                    </p>
+
+                    <div class="welcome-actions">
+                        <a th:href="@{/portfolios}"
+                           class="light-button">
+                            View Portfolios
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+
+                        <a th:href="@{/investor/analytics}"
+                           class="ghost-button">
+                            Open Analytics
+                        </a>
+                    </div>
+                </div>
+
+                <div class="wealth-summary">
+                    <div class="wealth-heading">
+                        <span>Total wealth</span>
+
+                        <span class="performance-pill"
+                              th:classappend="${profitable
+                                              ? ' positive'
+                                              : ' negative'}">
+                            <i th:class="${profitable
+                                         ? 'fa-solid fa-arrow-trend-up'
+                                         : 'fa-solid fa-arrow-trend-down'}">
+                            </i>
+
+                            <span th:text="${(profitable ? '+' : '')
+                                + #numbers.formatDecimal(
+                                    totalReturnPercentage,
+                                    1,
+                                    'COMMA',
+                                    2,
+                                    'POINT'
+                                )
+                                + '%'}">
+                                +0.00%
+                            </span>
+                        </span>
+                    </div>
+
+                    <strong class="wealth-value"
+                            th:text="${'₹' + #numbers.formatDecimal(
+                                totalCurrentValue,
+                                1,
+                                'COMMA',
+                                2,
+                                'POINT'
+                            )}">
+                        ₹0.00
+                    </strong>
+
+                    <div class="wealth-divider"></div>
+
+                    <div class="wealth-details">
+                        <div>
+                            <span>Invested</span>
+                            <strong th:text="${'₹' + #numbers.formatDecimal(
+                                totalInvested,
+                                1,
+                                'COMMA',
+                                2,
+                                'POINT'
+                            )}">
+                                ₹0.00
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span th:text="${profitable
+                                           ? 'Total profit'
+                                           : 'Total loss'}">
+                                Total profit
+                            </span>
+
+                            <strong th:classappend="${profitable
+                                                    ? ' positive-text'
+                                                    : ' negative-text'}"
+                                    th:text="${(profitable ? '+' : '-')
+                                        + '₹'
+                                        + #numbers.formatDecimal(
+                                            totalProfitLoss.abs(),
+                                            1,
+                                            'COMMA',
+                                            2,
+                                            'POINT'
+                                        )}">
+                                ₹0.00
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="stats-grid"
+                     aria-label="Investment summary">
+
+                <article class="stat-card stat-portfolios">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    <div>
+                        <span>My portfolios</span>
+                        <strong th:text="${portfolioCount}">0</strong>
+                        <small>Investment strategies</small>
+                    </div>
+                </article>
+
+                <article class="stat-card stat-assets">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-cubes-stacked"></i>
+                    </div>
+
+                    <div>
+                        <span>Active assets</span>
+                        <strong th:text="${assetCount}">0</strong>
+                        <small>Holdings across portfolios</small>
+                    </div>
+                </article>
+
+                <article class="stat-card stat-invested">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                    </div>
+
+                    <div>
+                        <span>Total invested</span>
+                        <strong th:text="${'₹' + #numbers.formatDecimal(
+                            totalInvested,
+                            1,
+                            'COMMA',
+                            2,
+                            'POINT'
+                        )}">
+                            ₹0.00
+                        </strong>
+                        <small>Original investment value</small>
+                    </div>
+                </article>
+
+                <article class="stat-card stat-current">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+
+                    <div>
+                        <span>Current value</span>
+                        <strong th:text="${'₹' + #numbers.formatDecimal(
+                            totalCurrentValue,
+                            1,
+                            'COMMA',
+                            2,
+                            'POINT'
+                        )}">
+                            ₹0.00
+                        </strong>
+                        <small>Live holding value</small>
+                    </div>
+                </article>
+
+            </section>
+
+            <section class="insights-grid">
+
+                <article class="insight-card allocation-card">
+                    <header class="card-heading">
+                        <div>
+                            <span class="eyebrow">Diversification</span>
+                            <h2>Portfolio allocation</h2>
+                            <p>Share of total current wealth.</p>
+                        </div>
+
+                        <div class="heading-icon">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                    </header>
+
+                    <div th:if="${#lists.isEmpty(portfolios)}"
+                         class="compact-empty">
+                        No portfolio allocation is available.
+                    </div>
+
+                    <div class="allocation-list"
+                         th:unless="${#lists.isEmpty(portfolios)}">
+
+                        <div class="allocation-item"
+                             th:each="portfolio : ${portfolios}">
+
+                            <div class="allocation-label">
+                                <div>
+                                    <span class="allocation-dot"></span>
+                                    <strong th:text="${portfolio.portfolioName}">
+                                        Portfolio
+                                    </strong>
+                                </div>
+
+                                <span th:text="${allocationByPortfolio[
+                                    portfolio.portfolioId
+                                ] + '%'}">
+                                    0%
+                                </span>
+                            </div>
+
+                            <div class="progress-track">
+                                <span class="progress-fill"
+                                      th:style="|--progress:${allocationByPortfolio[
+                                          portfolio.portfolioId
+                                      ]}%|">
+                                </span>
+                            </div>
+
+                            <small th:text="${'₹' + #numbers.formatDecimal(
+                                currentValueByPortfolio[
+                                    portfolio.portfolioId
+                                ],
+                                1,
+                                'COMMA',
+                                2,
+                                'POINT'
+                            )}">
+                                ₹0.00
+                            </small>
+                        </div>
+
+                    </div>
+                </article>
+
+                <article class="insight-card risk-card">
+                    <header class="card-heading">
+                        <div>
+                            <span class="eyebrow">Risk exposure</span>
+                            <h2>Risk distribution</h2>
+                            <p>Portfolio mix by risk profile.</p>
+                        </div>
+
+                        <div class="heading-icon">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                    </header>
+
+                    <div class="risk-overview">
+                        <div class="risk-total">
+                            <strong th:text="${portfolioCount}">0</strong>
+                            <span>Total portfolios</span>
+                        </div>
+
+                        <div class="risk-segments">
+                            <span class="risk-segment high"
+                                  th:style="|--segment:${highRiskPercentage}%|">
+                            </span>
+
+                            <span class="risk-segment medium"
+                                  th:style="|--segment:${mediumRiskPercentage}%|">
+                            </span>
+
+                            <span class="risk-segment low"
+                                  th:style="|--segment:${lowRiskPercentage}%|">
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="risk-list">
+                        <div>
+                            <span class="risk-color high"></span>
+
+                            <div>
+                                <strong>High risk</strong>
+                                <small>Aggressive strategy</small>
+                            </div>
+
+                            <span th:text="${highRiskCount}">0</span>
+                        </div>
+
+                        <div>
+                            <span class="risk-color medium"></span>
+
+                            <div>
+                                <strong>Medium risk</strong>
+                                <small>Balanced strategy</small>
+                            </div>
+
+                            <span th:text="${mediumRiskCount}">0</span>
+                        </div>
+
+                        <div>
+                            <span class="risk-color low"></span>
+
+                            <div>
+                                <strong>Low risk</strong>
+                                <small>Conservative strategy</small>
+                            </div>
+
+                            <span th:text="${lowRiskCount}">0</span>
+                        </div>
+                    </div>
+                </article>
+
+            </section>
+
+            <section class="portfolio-section">
+
+                <header class="section-header">
+                    <div>
+                        <span class="eyebrow">My investments</span>
+                        <h2>Portfolio overview</h2>
+                        <p>Performance and allocation for each portfolio.</p>
+                    </div>
+
+                    <div class="portfolio-tools">
+                        <div class="search-box"
+                             th:unless="${#lists.isEmpty(portfolios)}">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                            <label for="portfolioSearch"
+                                   class="sr-only">
+                                Search portfolios
+                            </label>
+
+                            <input type="search"
+                                   id="portfolioSearch"
+                                   placeholder="Search portfolio"
+                                   autocomplete="off">
+                        </div>
+
+                        <a th:href="@{/portfolios}"
+                           class="text-button">
+                            View all
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </header>
+
+                <div th:if="${#lists.isEmpty(portfolios)}"
+                     class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    <h2>No portfolios found</h2>
+                    <p>
+                        Your investment portfolios will appear here
+                        once they have been created.
+                    </p>
+
+                    <a th:href="@{/portfolios}"
+                       class="primary-button">
+                        Open Portfolios
+                    </a>
+                </div>
+
+                <div class="portfolio-grid"
+                     th:unless="${#lists.isEmpty(portfolios)}">
+
+                    <article class="portfolio-card"
+                             th:each="portfolio : ${portfolios}">
+
+                        <div class="portfolio-card-header">
+                            <div class="portfolio-identity">
+                                <div class="portfolio-icon">
+                                    <i class="fa-solid fa-wallet"></i>
+                                </div>
+
+                                <div>
+                                    <span>
+                                        Portfolio
+                                        #<span th:text="${portfolio.portfolioId}">0</span>
+                                    </span>
+
+                                    <h3 th:text="${portfolio.portfolioName}">
+                                        Portfolio Name
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <span class="risk-badge"
+                                  th:if="${portfolio.riskLevel != null}"
+                                  th:classappend="${' '
+                                      + #strings.toLowerCase(
+                                          portfolio.riskLevel.name()
+                                      )}"
+                                  th:text="${portfolio.riskLevel}">
+                                Risk
+                            </span>
+                        </div>
+
+                        <div class="portfolio-value">
+                            <span>Current portfolio value</span>
+
+                            <strong th:text="${'₹' + #numbers.formatDecimal(
+                                currentValueByPortfolio[
+                                    portfolio.portfolioId
+                                ],
+                                1,
+                                'COMMA',
+                                2,
+                                'POINT'
+                            )}">
+                                ₹0.00
+                            </strong>
+                        </div>
+
+                        <div class="portfolio-metrics">
+                            <div>
+                                <span>Invested</span>
+
+                                <strong th:text="${'₹' + #numbers.formatDecimal(
+                                    investedByPortfolio[
+                                        portfolio.portfolioId
+                                    ],
+                                    1,
+                                    'COMMA',
+                                    2,
+                                    'POINT'
+                                )}">
+                                    ₹0.00
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Assets</span>
+
+                                <strong th:text="${assetCountByPortfolio[
+                                    portfolio.portfolioId
+                                ]}">
+                                    0
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Profit / loss</span>
+
+                                <strong class="portfolio-profit"
+                                        th:classappend="${profitLossByPortfolio[
+                                            portfolio.portfolioId
+                                        ].signum() >= 0
+                                            ? ' positive-text'
+                                            : ' negative-text'}"
+                                        th:text="${(
+                                            profitLossByPortfolio[
+                                                portfolio.portfolioId
+                                            ].signum() >= 0
+                                                ? '+'
+                                                : '-'
+                                            )
+                                            + '₹'
+                                            + #numbers.formatDecimal(
+                                                profitLossByPortfolio[
+                                                    portfolio.portfolioId
+                                                ].abs(),
+                                                1,
+                                                'COMMA',
+                                                2,
+                                                'POINT'
+                                            )}">
+                                    ₹0.00
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="allocation-footer">
+                            <div>
+                                <span>Portfolio allocation</span>
+
+                                <strong th:text="${allocationByPortfolio[
+                                    portfolio.portfolioId
+                                ] + '%'}">
+                                    0%
+                                </strong>
+                            </div>
+
+                            <div class="progress-track">
+                                <span class="progress-fill"
+                                      th:style="|--progress:${allocationByPortfolio[
+                                          portfolio.portfolioId
+                                      ]}%|">
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="portfolio-actions">
+                            <a th:href="@{/assets}"
+                               class="secondary-button">
+                                <i class="fa-solid fa-cubes"></i>
+                                View Assets
+                            </a>
+
+                            <a th:href="@{/investor/analytics(
+                                   portfolioId=${portfolio.portfolioId}
+                               )}"
+                               class="analytics-button">
+                                Analytics
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </section>
 
         </div>
 
-        <div class="cards">
-
-            <div class="card">
-
-                <i class="fas fa-wallet"></i>
-
-                <h3>My Portfolios</h3>
-
-                <span id="portfolioCount">0</span>
-
-            </div>
-
-            <div class="card">
-
-                <i class="fas fa-coins"></i>
-
-                <h3>My Assets</h3>
-
-                <span id="assetCount">0</span>
-
-            </div>
-
-            <div class="card">
-
-                <i class="fas fa-money-bill"></i>
-
-                <h3>Total Investment</h3>
-
-                <span id="investmentValue">₹0</span>
-
-            </div>
-
-            <div class="card">
-
-                <i class="fas fa-chart-line"></i>
-
-                <h3>Current Value</h3>
-
-                <span id="currentValue">₹0</span>
-
-            </div>
-
-        </div>
-
-        <h2 class="section-title">
-
-            My Portfolios
-
-        </h2>
-
-        <div id="portfolioContainer"
-             class="portfolio-grid">
-
-        </div>
-
-    </div>
+    </main>
 
 </div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script src="../static/js/investor-dashboard.js"></script>
+<script
+        th:src="@{/js/investor-dashboard.js}"></script>
 
 </body>
-
 </html>

@@ -7,9 +7,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AssetRepository extends JpaRepository<Asset,Integer> {
+public interface AssetRepository extends JpaRepository<Asset, Integer> {
 
     List<Asset> findByPortfolioPortfolioId(Integer portfolioId);
+
+    List<Asset> findByPortfolioPortfolioIdAndActiveTrue(Integer portfolioId);
+
     List<Asset> findByActiveTrue();
 
+    List<Asset> findByActiveTrueAndPortfolioInvestorUserId(Integer userId);
+
+    long countByActiveTrue();
 }

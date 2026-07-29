@@ -16,10 +16,20 @@ public class AuthService {
 
     public User registerUser(User user) {
 
+        if(userRepository
+                .findByUsername(user.getUsername())
+                .isPresent()) {
+
+            throw new RuntimeException(
+                    "Username already exists"
+            );
+        }
+
         if(user.getRole() == Role.ADMIN) {
 
             throw new RuntimeException(
-                    "Admin Registration Not Allowed");
+                    "Admin Registration Not Allowed"
+            );
         }
 
         return userRepository.save(user);
@@ -68,7 +78,8 @@ public class AuthService {
         return userRepository.count();
     }
     public User updateProfile(
-            User user){
+            User user,
+            String currentPassword){
 
         System.out.println(
                 "Received Password: "
@@ -95,6 +106,14 @@ public class AuthService {
         if(user.getPassword() != null
                 &&
                 !user.getPassword().isBlank()){
+
+            if(!existingUser.getPassword()
+                    .equals(currentPassword)){
+
+                throw new RuntimeException(
+                        "Current Password is incorrect"
+                );
+            }
 
             existingUser.setPassword(
                     user.getPassword()

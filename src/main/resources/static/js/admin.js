@@ -1,109 +1,25 @@
-const user =
-    JSON.parse(
-        localStorage.getItem(
-            "loggedUser"
-        )
-    );
+document.addEventListener("DOMContentLoaded", () => {
+    const menuButton = document.getElementById("menuButton");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const navigationLinks = document.querySelectorAll(".side-nav .nav-link");
 
-if(user){
+    function closeSidebar() {
+        document.body.classList.remove("sidebar-open");
+    }
 
-    document.getElementById(
-        "username"
-    ).textContent =
-        user.username;
-}
-
-loadDashboardCounts();
-
-function loadDashboardCounts(){
-
-    fetch(
-        "http://localhost:8083/auth/count"
-    )
-    .then(response => response.json())
-    .then(data => {
-
-        document.getElementById(
-            "userCount"
-        ).textContent = data;
+    menuButton?.addEventListener("click", () => {
+        document.body.classList.toggle("sidebar-open");
     });
 
-    fetch(
-        "http://localhost:8083/portfolio/count"
-    )
-    .then(response => response.json())
-    .then(data => {
+    sidebarOverlay?.addEventListener("click", closeSidebar);
 
-        document.getElementById(
-            "portfolioCount"
-        ).textContent = data;
+    navigationLinks.forEach(link => {
+        link.addEventListener("click", closeSidebar);
     });
 
-    fetch(
-        "http://localhost:8083/assets/count"
-    )
-    .then(response => response.json())
-    .then(data => {
-
-        document.getElementById(
-            "assetCount"
-        ).textContent = data;
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 900) {
+            closeSidebar();
+        }
     });
-
-    fetch(
-        "http://localhost:8083/transaction/count"
-    )
-    .then(response => response.json())
-    .then(data => {
-
-        document.getElementById(
-            "transactionCount"
-        ).textContent = data;
-    });
-}
-
-function goToUsers(){
-
-    window.location.href =
-        "users.html";
-}
-
-function goToPortfolio(){
-
-    window.location.href =
-        "portfolio.html";
-}
-
-function goToAssets(){
-
-    window.location.href =
-        "asset.html";
-}
-
-function goToTransactions(){
-
-    window.location.href =
-        "transaction.html";
-}
-
-function goToAnalytics(){
-
-    window.location.href =
-        "performance-report.html";
-}
-
-function goToProfile(){
-
-    window.location.href =
-        "profile.html";
-}
-
-function logout(){
-
-    localStorage.removeItem(
-        "loggedUser"
-    );
-
-    window.location.href =
-        "login.html";
-}
+});

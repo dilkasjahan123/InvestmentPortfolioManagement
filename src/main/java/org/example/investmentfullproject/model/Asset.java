@@ -1,6 +1,16 @@
 package org.example.investmentfullproject.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 import java.math.BigDecimal;
 
@@ -37,23 +47,6 @@ public class Asset {
     private Boolean active = true;
 
     public Asset() {
-    }
-
-    public Asset(Integer assetId,
-                 Portfolio portfolio,
-                 String assetName,
-                 AssetType assetType,
-                 Integer quantity,
-                 BigDecimal purchasePrice,
-                 BigDecimal currentPrice) {
-
-        this.assetId = assetId;
-        this.portfolio = portfolio;
-        this.assetName = assetName;
-        this.assetType = assetType;
-        this.quantity = quantity;
-        this.purchasePrice = purchasePrice;
-        this.currentPrice = currentPrice;
     }
 
     public Integer getAssetId() {
@@ -111,11 +104,40 @@ public class Asset {
     public void setCurrentPrice(BigDecimal currentPrice) {
         this.currentPrice = currentPrice;
     }
+
     public Boolean getActive() {
         return active;
     }
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    @Transient
+    public BigDecimal getInvestedValue() {
+        if (purchasePrice == null || quantity == null) {
+            return BigDecimal.ZERO;
+        }
+
+        return purchasePrice.multiply(BigDecimal.valueOf(quantity));
+    }
+
+    @Transient
+    public BigDecimal getCurrentValue() {
+        if (currentPrice == null || quantity == null) {
+            return BigDecimal.ZERO;
+        }
+
+        return currentPrice.multiply(BigDecimal.valueOf(quantity));
+    }
+
+    @Transient
+    public BigDecimal getProfitLoss() {
+        return getCurrentValue().subtract(getInvestedValue());
+    }
+
+    @Transient
+    public boolean isProfitable() {
+        return getProfitLoss().compareTo(BigDecimal.ZERO) >= 0;
     }
 }

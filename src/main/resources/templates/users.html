@@ -1,138 +1,339 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management | InvestFlow</title>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>User Management</title>
-    <link rel="stylesheet" href="../static/css/users.css">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/users.css}">
 </head>
 
 <body>
 
-<div class="container">
+<div class="app-shell">
 
-    <!-- Header -->
+    <aside class="sidebar" id="sidebar">
+        <a class="brand" th:href="@{/admin}">
+            <span class="brand-mark">
+                <i class="fa-solid fa-chart-line"></i>
+            </span>
+            <span>
+                <strong>InvestFlow</strong>
+                <small>Admin workspace</small>
+            </span>
+        </a>
 
-    <div class="header">
+        <nav class="side-nav" aria-label="Main navigation">
+            <p class="nav-label">Workspace</p>
 
-        <div class="header-left">
+            <a class="nav-link" th:href="@{/admin}">
+                <i class="fa-solid fa-grid-2"></i>
+                <span>Dashboard</span>
+            </a>
 
-            <h1>
+            <a class="nav-link active" th:href="@{/users}">
+                <i class="fa-solid fa-users"></i>
+                <span>Users</span>
+            </a>
 
-                <i class="fas fa-users"></i>
+            <a class="nav-link" th:href="@{/portfolios}">
+                <i class="fa-solid fa-briefcase"></i>
+                <span>Portfolios</span>
+            </a>
 
-                User Management
+            <a class="nav-link" th:href="@{/assets}">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Assets</span>
+            </a>
 
-            </h1>
+            <p class="nav-label nav-label-spaced">Insights</p>
 
-            <p>
-                Manage investors and advisors
-            </p>
+            <a class="nav-link" th:href="@{/transactions}">
+                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                <span>Transactions</span>
+            </a>
 
-        </div>
+            <a class="nav-link" th:href="@{/performance-report}">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Analytics</span>
+            </a>
 
-        <button class="refresh-btn"
-                onclick="loadUsers()">
+            <a class="nav-link" th:href="@{/profile}">
+                <i class="fa-regular fa-user"></i>
+                <span>My profile</span>
+            </a>
+        </nav>
 
-            <i class="fas fa-rotate-right"></i>
-
-            Refresh
-
-        </button>
-
-    </div>
-
-    <!-- Statistics -->
-
-    <div class="stats">
-
-        <div class="stat-card advisor-card">
-
-            <i class="fas fa-user-tie"></i>
-
-            <div>
-
-                <h3>Total Advisors</h3>
-
-                <span id="advisorCount">0</span>
-
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <span class="avatar"
+                      th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}">A</span>
+                <span class="sidebar-user-copy">
+                    <strong th:text="${user.username}">Administrator</strong>
+                    <small>Administrator</small>
+                </span>
             </div>
 
+            <form th:action="@{/logout}" method="post">
+                <button class="logout-button" type="submit" aria-label="Log out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+            </form>
         </div>
+    </aside>
 
-        <div class="stat-card investor-card">
+    <button class="sidebar-overlay" id="sidebarOverlay"
+            type="button" aria-label="Close navigation"></button>
 
-            <i class="fas fa-chart-line"></i>
+    <main class="main-content">
 
-            <div>
+        <header class="topbar">
+            <button class="menu-button" id="menuButton"
+                    type="button" aria-label="Open navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
 
-                <h3>Total Investors</h3>
-
-                <span id="investorCount">0</span>
-
+            <div class="topbar-copy">
+                <span class="eyebrow">ADMINISTRATION</span>
+                <h1>User management</h1>
             </div>
 
+            <div class="topbar-actions">
+                <a class="back-link" th:href="@{/admin}">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Dashboard
+                </a>
+
+                <a class="profile-chip" th:href="@{/profile}">
+                    <span class="avatar"
+                          th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}">A</span>
+                    <span>
+                        <strong th:text="${user.username}">Administrator</strong>
+                        <small th:text="${user.email}">admin@example.com</small>
+                    </span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </header>
+
+        <div class="page-content users-page">
+
+            <section class="page-heading">
+                <div>
+                    <span class="heading-icon">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </span>
+                    <div>
+                        <span class="section-kicker">ACCOUNT DIRECTORY</span>
+                        <h2>People and access</h2>
+                        <p>Review every investor and advisor account on the platform.</p>
+                    </div>
+                </div>
+
+                <a class="refresh-button" th:href="@{/users}">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    Refresh list
+                </a>
+            </section>
+
+            <div th:if="${success}" class="alert success-alert" role="status">
+                <i class="fa-solid fa-circle-check"></i>
+                <span th:text="${success}">Success</span>
+            </div>
+
+            <div th:if="${error}" class="alert error-alert" role="alert">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span th:text="${error}">Error</span>
+            </div>
+
+            <section class="user-stats" aria-label="Account statistics">
+                <article class="user-stat-card">
+                    <span class="user-stat-icon all">
+                        <i class="fa-solid fa-users"></i>
+                    </span>
+                    <div>
+                        <small>Total accounts</small>
+                        <strong th:text="${userCount}">0</strong>
+                    </div>
+                    <span class="stat-label">All roles</span>
+                </article>
+
+                <article class="user-stat-card">
+                    <span class="user-stat-icon investors">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </span>
+                    <div>
+                        <small>Investors</small>
+                        <strong th:text="${investorCount}">0</strong>
+                    </div>
+                    <span class="stat-label green">Portfolio owners</span>
+                </article>
+
+                <article class="user-stat-card">
+                    <span class="user-stat-icon advisors">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </span>
+                    <div>
+                        <small>Advisors</small>
+                        <strong th:text="${advisorCount}">0</strong>
+                    </div>
+                    <span class="stat-label blue">Read access</span>
+                </article>
+
+                <article class="user-stat-card">
+                    <span class="user-stat-icon admins">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </span>
+                    <div>
+                        <small>Administrators</small>
+                        <strong th:text="${adminCount}">0</strong>
+                    </div>
+                    <span class="stat-label violet">Protected</span>
+                </article>
+            </section>
+
+            <section class="directory-panel">
+                <div class="directory-toolbar">
+                    <div>
+                        <h3>User directory</h3>
+                        <p>
+                            <span id="visibleUserCount" th:text="${userCount}">0</span>
+                            accounts shown
+                        </p>
+                    </div>
+
+                    <div class="directory-filters">
+                        <label class="search-control" for="searchUser">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="search"
+                                   id="searchUser"
+                                   placeholder="Search name or email"
+                                   autocomplete="off">
+                        </label>
+
+                        <label class="select-control" for="roleFilter">
+                            <i class="fa-solid fa-filter"></i>
+                            <select id="roleFilter">
+                                <option value="ALL">All roles</option>
+                                <option value="INVESTOR">Investors</option>
+                                <option value="ADVISOR">Advisors</option>
+                                <option value="ADMIN">Administrators</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="user-table">
+                        <thead>
+                        <tr>
+                            <th>Account</th>
+                            <th>User ID</th>
+                            <th>Email address</th>
+                            <th>Role</th>
+                            <th class="action-heading">Action</th>
+                        </tr>
+                        </thead>
+
+                        <tbody id="userTableBody">
+                        <tr th:each="account : ${users}"
+                            class="user-row"
+                            data-role="INVESTOR"
+                            data-search="username user@example.com"
+                            th:attr="data-role=${account.role.name()},
+                                     data-search=${account.username + ' ' + account.email}">
+
+                            <td data-label="Account">
+                                <div class="account-cell">
+                                    <span class="account-avatar"
+                                          th:classappend="${#strings.toLowerCase(account.role.name())}"
+                                          th:text="${#strings.substring(account.username, 0, 1).toUpperCase()}">U</span>
+                                    <div>
+                                        <strong th:text="${account.username}">Username</strong>
+                                        <small th:if="${account.userId == user.userId}">
+                                            Signed-in account
+                                        </small>
+                                        <small th:unless="${account.userId == user.userId}">
+                                            Platform member
+                                        </small>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td data-label="User ID">
+                                <span class="id-chip">
+                                    #<span th:text="${account.userId}">0</span>
+                                </span>
+                            </td>
+
+                            <td data-label="Email address">
+                                <a class="email-link"
+                                   th:href="'mailto:' + ${account.email}"
+                                   th:text="${account.email}">
+                                    user@example.com
+                                </a>
+                            </td>
+
+                            <td data-label="Role">
+                                <span class="role-badge"
+                                      th:classappend="${#strings.toLowerCase(account.role.name())}">
+                                    <i class="fa-solid fa-circle"></i>
+                                    <span th:text="${account.role}">INVESTOR</span>
+                                </span>
+                            </td>
+
+                            <td data-label="Action" class="action-cell">
+                                <span class="protected-label"
+                                      th:if="${account.role.name() == 'ADMIN'}">
+                                    <i class="fa-solid fa-lock"></i>
+                                    Protected
+                                </span>
+
+                                <form th:if="${account.role.name() != 'ADMIN'}"
+                                      th:action="@{/user/delete/{id}(id=${account.userId})}"
+                                      method="post"
+                                      class="delete-form">
+                                    <button type="submit"
+                                            class="delete-button"
+                                            th:attr="data-username=${account.username}">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="no-results" id="noResults" hidden>
+                    <span>
+                        <i class="fa-solid fa-user-slash"></i>
+                    </span>
+                    <h3>No matching users</h3>
+                    <p>Try a different name, email address, or role filter.</p>
+                </div>
+
+                <div class="no-results" th:if="${#lists.isEmpty(users)}">
+                    <span>
+                        <i class="fa-solid fa-users"></i>
+                    </span>
+                    <h3>No user accounts found</h3>
+                    <p>Accounts will appear here after registration.</p>
+                </div>
+            </section>
         </div>
-
-    </div>
-
-
-
-    <!-- Search Box -->
-
-    <div class="search-box">
-
-        <input type="text"
-               id="searchUser"
-               placeholder="Search username..."
-               onkeyup="searchUser()">
-
-    </div>
-
-    <!-- Table -->
-
-    <div class="table-container">
-
-        <table>
-
-            <thead>
-
-            <tr>
-
-                <th>ID</th>
-
-                <th>Username</th>
-
-                <th>Email</th>
-
-                <th>Role</th>
-
-                <th>Action</th>
-
-            </tr>
-
-            </thead>
-
-            <tbody id="userTable">
-
-            </tbody>
-
-        </table>
-
-    </div>
-
+    </main>
 </div>
 
-<script src="../static/js/users.js"></script>
-
+<script th:src="@{/js/users.js}"></script>
 </body>
 </html>

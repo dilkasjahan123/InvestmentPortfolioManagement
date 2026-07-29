@@ -1,190 +1,407 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | InvestFlow</title>
 
-    <title>Admin Dashboard</title>
-
-    <link rel="stylesheet" href="../static/css/admin.css">
-
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 
 <body>
 
-<div class="container">
+<div class="app-shell">
 
-    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <a class="brand" th:href="@{/admin}">
+            <span class="brand-mark">
+                <i class="fa-solid fa-chart-line"></i>
+            </span>
+            <span>
+                <strong>InvestFlow</strong>
+                <small>Admin workspace</small>
+            </span>
+        </a>
 
-    <div class="sidebar">
+        <nav class="side-nav" aria-label="Main navigation">
+            <p class="nav-label">Workspace</p>
 
-        <div class="logo">
+            <a class="nav-link active" th:href="@{/admin}">
+                <i class="fa-solid fa-grid-2"></i>
+                <span>Dashboard</span>
+            </a>
 
-            <i class="fas fa-chart-line"></i>
+            <a class="nav-link" th:href="@{/users}">
+                <i class="fa-solid fa-users"></i>
+                <span>Users</span>
+            </a>
 
-            <h2>IPMS</h2>
+            <a class="nav-link" th:href="@{/portfolios}">
+                <i class="fa-solid fa-briefcase"></i>
+                <span>Portfolios</span>
+            </a>
 
-        </div>
+            <a class="nav-link" th:href="@{/assets}">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Assets</span>
+            </a>
 
-        <ul>
+            <p class="nav-label nav-label-spaced">Insights</p>
 
-            <li class="active">
-                <i class="fas fa-home"></i>
-                Dashboard
-            </li>
+            <a class="nav-link" th:href="@{/transactions}">
+                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                <span>Transactions</span>
+            </a>
 
-            <li onclick="goToUsers()">
-                <i class="fas fa-users"></i>
-                Users
-            </li>
+            <a class="nav-link" th:href="@{/performance-report}">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Analytics</span>
+            </a>
 
-            <li onclick="goToPortfolio()">
-                <i class="fas fa-wallet"></i>
-                Portfolios
-            </li>
+            <a class="nav-link" th:href="@{/profile}">
+                <i class="fa-regular fa-user"></i>
+                <span>My profile</span>
+            </a>
+        </nav>
 
-            <li onclick="goToAssets()">
-                <i class="fas fa-coins"></i>
-                Assets
-            </li>
-
-            <li onclick="goToTransactions()">
-                <i class="fas fa-money-bill-transfer"></i>
-                Transactions
-            </li>
-
-            <li onclick="goToAnalytics()">
-                <i class="fas fa-chart-pie"></i>
-                Analytics
-            </li>
-
-            <li onclick="goToProfile()">
-                <i class="fas fa-user"></i>
-                Profile
-            </li>
-
-            <li onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i>
-                Logout
-            </li>
-
-        </ul>
-
-    </div>
-
-    <!-- Main Content -->
-
-    <div class="main-content">
-
-        <div class="top-bar">
-
-            <div>
-
-                <h1>
-                    Welcome,
-                    <span id="username"></span>
-                </h1>
-
-                <p>
-                    Investment Portfolio Management System
-                </p>
-
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <span class="avatar"
+                      th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}">A</span>
+                <span class="sidebar-user-copy">
+                    <strong th:text="${user.username}">Administrator</strong>
+                    <small>Administrator</small>
+                </span>
             </div>
 
+            <form th:action="@{/logout}" method="post">
+                <button class="logout-button" type="submit" aria-label="Log out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+            </form>
         </div>
+    </aside>
 
-        <!-- Cards -->
+    <button class="sidebar-overlay" id="sidebarOverlay"
+            type="button" aria-label="Close navigation"></button>
 
-        <div class="cards">
+    <main class="main-content">
 
-            <div class="card">
+        <header class="topbar">
+            <button class="menu-button" id="menuButton"
+                    type="button" aria-label="Open navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
 
-                <i class="fas fa-users"></i>
+            <div class="topbar-copy">
+                <span class="eyebrow">ADMINISTRATION</span>
+                <h1>Overview</h1>
+            </div>
 
-                <h3>Total Users</h3>
-
-                <span id="userCount">
-                    0
+            <div class="topbar-actions">
+                <span class="date-chip">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span th:text="${today}">Wednesday, 29 July 2026</span>
                 </span>
 
+                <a class="profile-chip" th:href="@{/profile}">
+                    <span class="avatar"
+                          th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}">A</span>
+                    <span>
+                        <strong th:text="${user.username}">Administrator</strong>
+                        <small th:text="${user.email}">admin@example.com</small>
+                    </span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
             </div>
+        </header>
 
-            <div class="card">
+        <div class="page-content">
 
-                <i class="fas fa-wallet"></i>
+            <section class="hero-panel">
+                <div>
+                    <span class="hero-kicker">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        System control centre
+                    </span>
 
-                <h3>Portfolios</h3>
+                    <h2>
+                        Welcome back,
+                        <span th:text="${user.username}">Administrator</span>
+                    </h2>
 
-                <span id="portfolioCount">
-                    0
-                </span>
+                    <p>
+                        Monitor platform activity, manage accounts, and review
+                        investment performance from one workspace.
+                    </p>
+                </div>
 
-            </div>
+                <div class="hero-value">
+                    <span>Assets under management</span>
+                    <strong>
+                        ₹<span th:text="${#numbers.formatDecimal(
+                                totalCurrentValue, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                    </strong>
+                    <small th:classappend="${totalProfitLoss.signum() >= 0}
+                            ? ' positive' : ' negative'">
+                        <i th:class="${totalProfitLoss.signum() >= 0}
+                                ? 'fa-solid fa-arrow-trend-up'
+                                : 'fa-solid fa-arrow-trend-down'"></i>
+                        <span th:text="${#numbers.formatDecimal(
+                                totalReturnPercentage, 1, 'COMMA', 2, 'POINT')}">0.00</span>%
+                        overall return
+                    </small>
+                </div>
+            </section>
 
-            <div class="card">
+            <section class="metric-grid" aria-label="Platform summary">
+                <a class="metric-card" th:href="@{/users}">
+                    <span class="metric-icon blue">
+                        <i class="fa-solid fa-users"></i>
+                    </span>
+                    <span class="metric-copy">
+                        <small>Total users</small>
+                        <strong th:text="${userCount}">0</strong>
+                        <em>
+                            <span th:text="${investorCount}">0</span>
+                            active investor accounts
+                        </em>
+                    </span>
+                    <i class="fa-solid fa-arrow-up-right-from-square metric-arrow"></i>
+                </a>
 
-                <i class="fas fa-coins"></i>
+                <a class="metric-card" th:href="@{/portfolios}">
+                    <span class="metric-icon violet">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </span>
+                    <span class="metric-copy">
+                        <small>Portfolios</small>
+                        <strong th:text="${portfolioCount}">0</strong>
+                        <em>Across all investors</em>
+                    </span>
+                    <i class="fa-solid fa-arrow-up-right-from-square metric-arrow"></i>
+                </a>
 
-                <h3>Assets</h3>
+                <a class="metric-card" th:href="@{/assets}">
+                    <span class="metric-icon emerald">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </span>
+                    <span class="metric-copy">
+                        <small>Active assets</small>
+                        <strong th:text="${assetCount}">0</strong>
+                        <em>Currently tracked</em>
+                    </span>
+                    <i class="fa-solid fa-arrow-up-right-from-square metric-arrow"></i>
+                </a>
 
-                <span id="assetCount">
-                    0
-                </span>
+                <a class="metric-card" th:href="@{/transactions}">
+                    <span class="metric-icon amber">
+                        <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                    </span>
+                    <span class="metric-copy">
+                        <small>Transactions</small>
+                        <strong th:text="${transactionCount}">0</strong>
+                        <em>Recorded activity</em>
+                    </span>
+                    <i class="fa-solid fa-arrow-up-right-from-square metric-arrow"></i>
+                </a>
+            </section>
 
-            </div>
+            <section class="dashboard-grid">
 
-            <div class="card">
+                <article class="panel performance-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <span class="section-kicker">PERFORMANCE</span>
+                            <h3>Investment position</h3>
+                        </div>
+                        <a th:href="@{/performance-report}">
+                            View report
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
 
-                <i class="fas fa-money-bill-transfer"></i>
+                    <div class="value-comparison">
+                        <div class="value-item">
+                            <span>Invested value</span>
+                            <strong>
+                                ₹<span th:text="${#numbers.formatDecimal(
+                                        totalInvested, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                            </strong>
+                        </div>
 
-                <h3>Transactions</h3>
+                        <div class="value-divider"></div>
 
-                <span id="transactionCount">
-                    0
-                </span>
+                        <div class="value-item">
+                            <span>Current value</span>
+                            <strong>
+                                ₹<span th:text="${#numbers.formatDecimal(
+                                        totalCurrentValue, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                            </strong>
+                        </div>
+                    </div>
 
-            </div>
+                    <div class="profit-strip"
+                         th:classappend="${totalProfitLoss.signum() >= 0}
+                                ? ' profit' : ' loss'">
+                        <span>
+                            <i th:class="${totalProfitLoss.signum() >= 0}
+                                    ? 'fa-solid fa-circle-arrow-up'
+                                    : 'fa-solid fa-circle-arrow-down'"></i>
+                            Net profit / loss
+                        </span>
 
+                        <strong>
+                            <span th:text="${totalProfitLoss.signum() >= 0 ? '+' : '-'}">+</span>₹<span
+                                th:text="${#numbers.formatDecimal(
+                                totalProfitLoss.abs(), 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                        </strong>
+                    </div>
+                </article>
+
+                <article class="panel distribution-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <span class="section-kicker">COMMUNITY</span>
+                            <h3>User distribution</h3>
+                        </div>
+                        <a th:href="@{/users}">Manage</a>
+                    </div>
+
+                    <div class="distribution-list">
+                        <div class="distribution-row">
+                            <div>
+                                <span class="legend-dot investors"></span>
+                                <span>Investors</span>
+                            </div>
+                            <strong th:text="${investorCount}">0</strong>
+                        </div>
+                        <div class="progress-track">
+                            <span class="investor-progress"
+                                  th:style="'width:' + ${userCount > 0
+                                        ? investorCount * 100 / userCount : 0} + '%'"></span>
+                        </div>
+
+                        <div class="distribution-row">
+                            <div>
+                                <span class="legend-dot advisors"></span>
+                                <span>Advisors</span>
+                            </div>
+                            <strong th:text="${advisorCount}">0</strong>
+                        </div>
+                        <div class="progress-track">
+                            <span class="advisor-progress"
+                                  th:style="'width:' + ${userCount > 0
+                                        ? advisorCount * 100 / userCount : 0} + '%'"></span>
+                        </div>
+
+                        <div class="distribution-row">
+                            <div>
+                                <span class="legend-dot administrators"></span>
+                                <span>Administrators</span>
+                            </div>
+                            <strong th:text="${adminCount}">0</strong>
+                        </div>
+                        <div class="progress-track">
+                            <span class="admin-progress"
+                                  th:style="'width:' + ${userCount > 0
+                                        ? adminCount * 100 / userCount : 0} + '%'"></span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="panel risk-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <span class="section-kicker">PORTFOLIOS</span>
+                            <h3>Risk overview</h3>
+                        </div>
+                        <a th:href="@{/portfolios}">View all</a>
+                    </div>
+
+                    <div class="risk-grid">
+                        <div class="risk-card high">
+                            <span class="risk-icon">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                            </span>
+                            <strong th:text="${highRiskCount}">0</strong>
+                            <small>High risk</small>
+                        </div>
+
+                        <div class="risk-card medium">
+                            <span class="risk-icon">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </span>
+                            <strong th:text="${mediumRiskCount}">0</strong>
+                            <small>Medium risk</small>
+                        </div>
+
+                        <div class="risk-card low">
+                            <span class="risk-icon">
+                                <i class="fa-solid fa-shield"></i>
+                            </span>
+                            <strong th:text="${lowRiskCount}">0</strong>
+                            <small>Low risk</small>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="panel quick-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <span class="section-kicker">SHORTCUTS</span>
+                            <h3>Quick actions</h3>
+                        </div>
+                    </div>
+
+                    <div class="quick-list">
+                        <a th:href="@{/users}">
+                            <span class="quick-icon blue">
+                                <i class="fa-solid fa-user-gear"></i>
+                            </span>
+                            <span>
+                                <strong>Manage users</strong>
+                                <small>Review investor and advisor accounts</small>
+                            </span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+
+                        <a th:href="@{/portfolios}">
+                            <span class="quick-icon violet">
+                                <i class="fa-solid fa-folder-tree"></i>
+                            </span>
+                            <span>
+                                <strong>Review portfolios</strong>
+                                <small>Inspect ownership, value, and risk</small>
+                            </span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+
+                        <a th:href="@{/assets}">
+                            <span class="quick-icon emerald">
+                                <i class="fa-solid fa-coins"></i>
+                            </span>
+                            <span>
+                                <strong>Track assets</strong>
+                                <small>Monitor active holdings and prices</small>
+                            </span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+            </section>
         </div>
-
-        <!-- Quick Actions -->
-
-        <div class="actions">
-
-            <h2>Quick Actions</h2>
-
-            <div class="action-buttons">
-
-                <button onclick="goToUsers()">
-                    Manage Users
-                </button>
-
-                <button onclick="goToPortfolio()">
-                    Manage Portfolios
-                </button>
-
-                <button onclick="goToAssets()">
-                    Manage Assets
-                </button>
-
-                <button onclick="goToAnalytics()">
-                    View Analytics
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
+    </main>
 </div>
 
-<script src="../static/js/admin.js"></script>
-
+<script th:src="@{/js/admin.js}"></script>
 </body>
 </html>

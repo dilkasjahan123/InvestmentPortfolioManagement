@@ -1,274 +1,225 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investment Portfolio Management System</title>
-    <!-- CSS -->
-    <link rel="stylesheet" href="../static/css/login.css">
-    <!-- Google Fonts -->
-    <link href="https://apis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+    <meta name="description"
+          content="Sign in to the InvestFlow investment portfolio management system.">
+    <title>Sign In | InvestFlow</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="auth.css" th:href="@{/css/auth.css}">
 </head>
-<body>
 
-<div class="background"></div>
-<div class="login-container">
-    <div class="left-panel">
-        <h1>Investment Portfolio Management</h1>
-        <p>
-            Manage portfolios, monitor assets,
-            track performance and make smarter
-            investment decisions.
-        </p>
+<body class="auth-page">
 
-        <div class="stats">
+<div class="ambient-shape shape-one"></div>
+<div class="ambient-shape shape-two"></div>
+<div class="ambient-grid"></div>
 
-            <div class="stat-card">
-                <i class="fas fa-chart-line"></i>
-                <span>Analytics</span>
+<main class="auth-shell">
+
+    <section class="auth-showcase">
+        <a class="auth-brand" th:href="@{/}">
+            <span class="brand-symbol">
+                <i class="fa-solid fa-chart-line"></i>
+            </span>
+            <span>
+                <strong>InvestFlow</strong>
+                <small>Wealth workspace</small>
+            </span>
+        </a>
+
+        <div class="showcase-copy">
+            <span class="showcase-label">
+                <i class="fa-solid fa-shield-halved"></i>
+                Investment management, simplified
+            </span>
+
+            <h1>
+                Make every investment
+                <span>decision count.</span>
+            </h1>
+
+            <p>
+                One secure workspace for portfolios, assets, performance,
+                and the people behind every investment decision.
+            </p>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <span class="feature-icon blue">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </span>
+                    <span>
+                        <strong>Portfolio clarity</strong>
+                        <small>See allocation, risk, and current value together.</small>
+                    </span>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon violet">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </span>
+                    <span>
+                        <strong>Performance insights</strong>
+                        <small>Understand invested value, returns, and growth.</small>
+                    </span>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon emerald">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </span>
+                    <span>
+                        <strong>Role-based workspace</strong>
+                        <small>Purpose-built experiences for every account role.</small>
+                    </span>
+                </div>
             </div>
-
-            <div class="stat-card">
-                <i class="fas fa-wallet"></i>
-                <span>Portfolio</span>
-            </div>
-
-            <div class="stat-card">
-                <i class="fas fa-shield-alt"></i>
-                <span>Secure Access</span>
-            </div>
-
         </div>
 
-    </div>
+        <div class="showcase-footer">
+            <div class="trust-stack">
+                <span><i class="fa-solid fa-lock"></i></span>
+                <span><i class="fa-solid fa-shield"></i></span>
+                <span><i class="fa-solid fa-check"></i></span>
+            </div>
+            <p>
+                <strong>Secure account access</strong>
+                <small>Your workspace is protected by session-based authentication.</small>
+            </p>
+        </div>
+    </section>
 
-    <div class="login-card">
-
-        <div class="logo">
-            <i class="fas fa-coins"></i>
+    <section class="auth-form-panel">
+        <div class="mobile-brand">
+            <span class="brand-symbol">
+                <i class="fa-solid fa-chart-line"></i>
+            </span>
+            <strong>InvestFlow</strong>
         </div>
 
-        <h2>Welcome Back</h2>
-
-        <p class="subtitle">
-            Sign in to your account
-        </p>
-
-        <form>
-
-            <div class="input-group">
-
-                <label for="username" hidden>Username</label>
-
-                <i class="fas fa-user"></i>
-
-                <input type="text"
-                       id="username"
-                       placeholder="Username"
-                       required>
+        <div class="auth-card">
+            <div class="auth-heading">
+                <span class="welcome-icon">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                </span>
+                <span class="section-kicker">WELCOME BACK</span>
+                <h2>Sign in to your account</h2>
+                <p>Enter your account details to continue to InvestFlow.</p>
             </div>
 
-            <div class="input-group">
-
-                <label for="password" hidden>Password</label>
-
-                <i class="fas fa-lock"></i>
-
-                <input type="password"
-                       id="password"
-                       placeholder="Password"
-                       required>
-
-                <i class="fas fa-eye toggle-password"
-                   onclick="togglePassword()"></i>
-
+            <div th:if="${success}"
+                 class="server-alert success-alert"
+                 role="status"
+                 style="display: none"
+                 th:style="'display:flex'">
+                <i class="fa-solid fa-circle-check"></i>
+                <span th:text="${success}">Registration completed successfully.</span>
             </div>
 
-            <div class="input-group">
-
-                <label for="role" hidden>Role</label>
-
-                <i class="fas fa-user-tag"></i>
-
-                <select id="role" required>
-                    <option value="">Select Role</option>
-                    <option value="ADMIN">Admin</option>
-                    <option value="ADVISOR">Advisor</option>
-                    <option value="INVESTOR">Investor</option>
-                </select>
-
+            <div th:if="${error}"
+                 class="server-alert error-alert"
+                 role="alert"
+                 style="display: none"
+                 th:style="'display:flex'">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span th:text="${error}">Unable to sign in.</span>
             </div>
 
-            <div class="options">
+            <form class="auth-form"
+                  id="loginForm"
+                  th:action="@{/login}"
+                  th:object="${user}"
+                  method="post">
 
-                <label>
-                    <input type="checkbox">
-                    Remember Me
-                </label>
+                <div class="field-group">
+                    <label for="username">Username</label>
+                    <div class="field-control">
+                        <i class="fa-regular fa-user leading-icon"></i>
+                        <input type="text"
+                               id="username"
+                               th:field="*{username}"
+                               placeholder="Enter your username"
+                               autocomplete="username"
+                               autofocus
+                               required>
+                    </div>
+                </div>
 
+                <div class="field-group">
+                    <div class="field-label-row">
+                        <label for="password">Password</label>
+                    </div>
+
+                    <div class="field-control">
+                        <i class="fa-solid fa-lock leading-icon"></i>
+                        <input type="password"
+                               id="password"
+                               th:field="*{password}"
+                               placeholder="Enter your password"
+                               autocomplete="current-password"
+                               required>
+
+                        <button type="button"
+                                class="password-visibility"
+                                data-password-target="password"
+                                aria-label="Show password">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label for="role">Account role</label>
+                    <div class="field-control select-field">
+                        <i class="fa-solid fa-user-tag leading-icon"></i>
+                        <select id="role"
+                                th:field="*{role}"
+                                required>
+                            <option value="">Choose your account role</option>
+                            <option value="ADMIN">Administrator</option>
+                            <option value="ADVISOR">Advisor</option>
+                            <option value="INVESTOR">Investor</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                    </div>
+                </div>
+
+                <div class="form-note">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Select the same role assigned to your registered account.</span>
+                </div>
+
+                <button type="submit" class="primary-auth-button" id="loginButton">
+                    <span>Sign in</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="auth-separator">
+                <span>New to InvestFlow?</span>
             </div>
 
-            <button type="button"
-                    class="login-btn"
-                    onclick="loginUser()">
-                Login
-            </button>
+            <a class="secondary-auth-button" th:href="@{/register}">
+                Create an account
+                <i class="fa-solid fa-user-plus"></i>
+            </a>
 
-        </form>
+            <p class="terms-copy">
+                By continuing, you agree to use this training application responsibly.
+            </p>
+        </div>
+    </section>
+</main>
 
-        <p class="register-text">
-            Don't have an account?
-            <a href="register.html">Register</a>
-        </p>
-
-    </div>
-
-</div>
-
-<script>
-
-    function togglePassword() {
-
-        const password =
-            document.getElementById(
-                "password"
-            );
-
-        password.type =
-            password.type === "password"
-                ? "text"
-                : "password";
-    }
-
-    function loginUser() {
-
-        let username =
-            document.getElementById(
-                "username"
-            ).value.trim();
-
-        let password =
-            document.getElementById(
-                "password"
-            ).value.trim();
-
-        let role =
-            document.getElementById(
-                "role"
-            ).value;
-
-        if (
-            username === "" ||
-            password === "" ||
-            role === ""
-        ) {
-
-            alert(
-                "Please fill all fields"
-            );
-
-            return;
-        }
-
-        const user = {
-
-            username: username,
-
-            password: password
-        };
-
-        fetch(
-            "http://localhost:8083/auth/login",
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-
-                body:
-                    JSON.stringify(user)
-            }
-        )
-
-        .then(response => {
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Invalid Login"
-                );
-            }
-
-            return response.json();
-        })
-
-        .then(data => {
-
-            if (
-                data.role !== role
-            ) {
-
-                alert(
-                    "Selected role does not match account role"
-                );
-
-                return;
-            }
-
-            localStorage.setItem(
-                "loggedUser",
-                JSON.stringify(data)
-            );
-
-            alert(
-                "Login Successful"
-            );
-
-            switch (data.role) {
-
-                case "ADMIN":
-
-                    window.location.href =
-                        "admin.html";
-                    break;
-
-                case "ADVISOR":
-
-                    window.location.href =
-                        "advisor.html";
-                    break;
-
-                case "INVESTOR":
-
-                    window.location.href =
-                        "investor-dashboard.html";
-                    break;
-
-                default:
-
-                    alert(
-                        "Role Not Found"
-                    );
-            }
-
-        })
-
-        .catch(error => {
-
-            alert(
-                "Invalid Username or Password"
-            );
-        });
-    }
-
-</script>
-
+<script src="login.js" th:src="@{/js/login.js}"></script>
 </body>
-
 </html>

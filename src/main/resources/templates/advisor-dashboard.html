@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Advisor Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet"
+          th:href="@{/css/advisor-dashboard.css}">
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar"
+           id="advisorSidebar">
+
+        <a th:href="@{/advisor}"
+           class="sidebar-brand">
+            <span class="brand-mark">
+                <i class="fa-solid fa-user-tie"></i>
+            </span>
+
+            <span>
+                <strong>InvestFlow</strong>
+                <small>Advisor workspace</small>
+            </span>
+        </a>
+
+        <p class="navigation-label">Workspace</p>
+
+        <nav class="sidebar-navigation"
+             aria-label="Advisor navigation">
+
+            <a th:href="@{/advisor}"
+               class="active">
+                <span class="nav-icon">
+                    <i class="fa-solid fa-house"></i>
+                </span>
+                Dashboard
+            </a>
+
+            <a th:href="@{/portfolios}">
+                <span class="nav-icon">
+                    <i class="fa-solid fa-briefcase"></i>
+                </span>
+                Portfolio Overview
+            </a>
+
+            <a th:href="@{/assets}">
+                <span class="nav-icon">
+                    <i class="fa-solid fa-cubes"></i>
+                </span>
+                Asset Overview
+            </a>
+
+            <a th:href="@{/performance-report}">
+                <span class="nav-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </span>
+                Performance Reports
+            </a>
+
+        </nav>
+
+        <p class="navigation-label account-label">Account</p>
+
+        <nav class="sidebar-navigation"
+             aria-label="Account navigation">
+            <a th:href="@{/profile}">
+                <span class="nav-icon">
+                    <i class="fa-regular fa-user"></i>
+                </span>
+                My Profile
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="advisor-identity">
+                <div class="advisor-avatar">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+
+                <div>
+                    <strong th:text="${user.username}">
+                        Advisor
+                    </strong>
+                    <span th:text="${user.role}">
+                        ADVISOR
+                    </span>
+                </div>
+            </div>
+
+            <form th:action="@{/logout}"
+                  method="post">
+                <button type="submit"
+                        class="logout-button">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <div class="sidebar-overlay"
+         id="sidebarOverlay">
+    </div>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <button type="button"
+                        class="menu-button"
+                        id="menuButton"
+                        aria-label="Open navigation"
+                        aria-controls="advisorSidebar"
+                        aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div>
+                    <span>Advisor dashboard</span>
+                    <strong th:text="${today}">
+                        Wednesday, 29 July 2026
+                    </strong>
+                </div>
+            </div>
+
+            <a th:href="@{/profile}"
+               class="topbar-user">
+                <div class="topbar-avatar">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+
+                <div>
+                    <strong th:text="${user.username}">
+                        Advisor
+                    </strong>
+                    <span>View profile</span>
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+        </header>
+
+        <div class="dashboard-content">
+
+            <section class="welcome-panel">
+                <div class="welcome-copy">
+                    <span class="welcome-label">
+                        <i class="fa-solid fa-sparkles"></i>
+                        Advisory overview
+                    </span>
+
+                    <h1>
+                        Welcome back,
+                        <span th:text="${user.username}">
+                            Advisor
+                        </span>
+                    </h1>
+
+                    <p>
+                        Monitor investor wealth, portfolio exposure and
+                        asset performance from one professional workspace.
+                    </p>
+
+                    <div class="welcome-actions">
+                        <a th:href="@{/portfolios}"
+                           class="light-button">
+                            Review Portfolios
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+
+                        <a th:href="@{/performance-report}"
+                           class="ghost-button">
+                            Performance Report
+                        </a>
+                    </div>
+                </div>
+
+                <div class="managed-wealth">
+                    <div class="managed-heading">
+                        <span>Assets under review</span>
+
+                        <span class="return-badge"
+                              th:classappend="${profitable
+                                              ? ' positive'
+                                              : ' negative'}">
+                            <i th:class="${profitable
+                                         ? 'fa-solid fa-arrow-trend-up'
+                                         : 'fa-solid fa-arrow-trend-down'}">
+                            </i>
+
+                            <span th:text="${(profitable ? '+' : '')
+                                + #numbers.formatDecimal(
+                                    totalReturnPercentage,
+                                    1,
+                                    'COMMA',
+                                    2,
+                                    'POINT'
+                                )
+                                + '%'}">
+                                +0.00%
+                            </span>
+                        </span>
+                    </div>
+
+                    <strong class="managed-value"
+                            th:text="${'₹' + #numbers.formatDecimal(
+                                totalCurrentValue,
+                                1,
+                                'COMMA',
+                                2,
+                                'POINT'
+                            )}">
+                        ₹0.00
+                    </strong>
+
+                    <div class="managed-divider"></div>
+
+                    <div class="managed-details">
+                        <div>
+                            <span>Total invested</span>
+                            <strong th:text="${'₹' + #numbers.formatDecimal(
+                                totalInvested,
+                                1,
+                                'COMMA',
+                                2,
+                                'POINT'
+                            )}">
+                                ₹0.00
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span th:text="${profitable
+                                           ? 'Unrealized profit'
+                                           : 'Unrealized loss'}">
+                                Unrealized profit
+                            </span>
+
+                            <strong th:classappend="${profitable
+                                                    ? ' positive-text'
+                                                    : ' negative-text'}"
+                                    th:text="${(profitable ? '+' : '-')
+                                        + '₹'
+                                        + #numbers.formatDecimal(
+                                            totalProfitLoss.abs(),
+                                            1,
+                                            'COMMA',
+                                            2,
+                                            'POINT'
+                                        )}">
+                                ₹0.00
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="summary-grid"
+                     aria-label="Advisor summary">
+
+                <article class="summary-card investors-summary">
+                    <div class="summary-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                    <div>
+                        <span>Investors</span>
+                        <strong th:text="${investorCount}">0</strong>
+                        <small>Accounts under review</small>
+                    </div>
+                </article>
+
+                <article class="summary-card portfolio-summary">
+                    <div class="summary-icon">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+
+                    <div>
+                        <span>Portfolios</span>
+                        <strong th:text="${portfolioCount}">0</strong>
+                        <small>Investment strategies</small>
+                    </div>
+                </article>
+
+                <article class="summary-card assets-summary">
+                    <div class="summary-icon">
+                        <i class="fa-solid fa-cubes-stacked"></i>
+                    </div>
+
+                    <div>
+                        <span>Active assets</span>
+                        <strong th:text="${assetCount}">0</strong>
+                        <small>Holdings being monitored</small>
+                    </div>
+                </article>
+
+                <article class="summary-card value-summary">
+                    <div class="summary-icon">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                    </div>
+
+                    <div>
+                        <span>Total current value</span>
+                        <strong th:text="${'₹' + #numbers.formatDecimal(
+                            totalCurrentValue,
+                            1,
+                            'COMMA',
+                            2,
+                            'POINT'
+                        )}">
+                            ₹0.00
+                        </strong>
+                        <small>Combined investor wealth</small>
+                    </div>
+                </article>
+
+            </section>
+
+            <section class="insights-grid">
+
+                <article class="insight-card performance-card">
+                    <header class="card-header">
+                        <div>
+                            <span class="eyebrow">Financial health</span>
+                            <h2>Performance overview</h2>
+                            <p>Combined unrealized portfolio performance.</p>
+                        </div>
+
+                        <div class="header-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                    </header>
+
+                    <div class="performance-values">
+                        <div>
+                            <span>Capital invested</span>
+                            <strong th:text="${'₹' + #numbers.formatDecimal(
+                                totalInvested,
+                                1,
+                                'COMMA',
+                                2,
+                                'POINT'
+                            )}">
+                                ₹0.00
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Market value</span>
+                            <strong th:text="${'₹' + #numbers.formatDecimal(
+                                totalCurrentValue,
+                                1,
+                                'COMMA',
+                                2,
+                                'POINT'
+                            )}">
+                                ₹0.00
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Return</span>
+                            <strong th:classappend="${profitable
+                                                    ? ' positive-text'
+                                                    : ' negative-text'}"
+                                    th:text="${(profitable ? '+' : '')
+                                        + #numbers.formatDecimal(
+                                            totalReturnPercentage,
+                                            1,
+                                            'COMMA',
+                                            2,
+                                            'POINT'
+                                        )
+                                        + '%'}">
+                                0.00%
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="performance-track">
+                        <span th:classappend="${profitable
+                                              ? ' positive'
+                                              : ' negative'}">
+                        </span>
+                    </div>
+
+                    <p class="performance-note">
+                        <i class="fa-solid fa-circle-info"></i>
+                        Based on purchase price versus current price
+                        for active assets.
+                    </p>
+                </article>
+
+                <article class="insight-card risk-card">
+                    <header class="card-header">
+                        <div>
+                            <span class="eyebrow">Exposure profile</span>
+                            <h2>Portfolio risk mix</h2>
+                            <p>Distribution across all managed portfolios.</p>
+                        </div>
+
+                        <div class="header-icon">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                    </header>
+
+                    <div class="risk-meter">
+                        <span class="high"
+                              th:style="|--risk:${highRiskPercentage}%|">
+                        </span>
+
+                        <span class="medium"
+                              th:style="|--risk:${mediumRiskPercentage}%|">
+                        </span>
+
+                        <span class="low"
+                              th:style="|--risk:${lowRiskPercentage}%|">
+                        </span>
+                    </div>
+
+                    <div class="risk-list">
+                        <div>
+                            <span class="risk-dot high"></span>
+                            <div>
+                                <strong>High risk</strong>
+                                <small th:text="${highRiskPercentage + '%'}">0%</small>
+                            </div>
+                            <span th:text="${highRiskCount}">0</span>
+                        </div>
+
+                        <div>
+                            <span class="risk-dot medium"></span>
+                            <div>
+                                <strong>Medium risk</strong>
+                                <small th:text="${mediumRiskPercentage + '%'}">0%</small>
+                            </div>
+                            <span th:text="${mediumRiskCount}">0</span>
+                        </div>
+
+                        <div>
+                            <span class="risk-dot low"></span>
+                            <div>
+                                <strong>Low risk</strong>
+                                <small th:text="${lowRiskPercentage + '%'}">0%</small>
+                            </div>
+                            <span th:text="${lowRiskCount}">0</span>
+                        </div>
+                    </div>
+                </article>
+
+            </section>
+
+            <section class="quick-actions-section">
+                <header class="section-heading">
+                    <div>
+                        <span class="eyebrow">Shortcuts</span>
+                        <h2>Quick actions</h2>
+                        <p>Open frequently used advisory tools.</p>
+                    </div>
+                </header>
+
+                <div class="quick-actions-grid">
+                    <a th:href="@{/portfolios}"
+                       class="action-card">
+                        <div class="action-icon portfolio-action">
+                            <i class="fa-solid fa-briefcase"></i>
+                        </div>
+
+                        <div>
+                            <h3>Portfolio Overview</h3>
+                            <p>Review portfolios grouped by investor.</p>
+                        </div>
+
+                        <i class="fa-solid fa-arrow-right action-arrow"></i>
+                    </a>
+
+                    <a th:href="@{/assets}"
+                       class="action-card">
+                        <div class="action-icon assets-action">
+                            <i class="fa-solid fa-cubes"></i>
+                        </div>
+
+                        <div>
+                            <h3>Asset Overview</h3>
+                            <p>Inspect holdings, values and performance.</p>
+                        </div>
+
+                        <i class="fa-solid fa-arrow-right action-arrow"></i>
+                    </a>
+
+                    <a th:href="@{/performance-report}"
+                       class="action-card">
+                        <div class="action-icon report-action">
+                            <i class="fa-solid fa-chart-column"></i>
+                        </div>
+
+                        <div>
+                            <h3>Performance Reports</h3>
+                            <p>Analyze returns and risk exposure.</p>
+                        </div>
+
+                        <i class="fa-solid fa-arrow-right action-arrow"></i>
+                    </a>
+                </div>
+            </section>
+
+            <section class="investor-section">
+                <header class="section-heading investor-heading">
+                    <div>
+                        <span class="eyebrow">Client directory</span>
+                        <h2>Investor summary</h2>
+                        <p>Portfolio and asset performance by investor.</p>
+                    </div>
+
+                    <div class="investor-tools">
+                        <div class="search-box"
+                             th:unless="${#lists.isEmpty(investors)}">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                            <label for="investorSearch"
+                                   class="sr-only">
+                                Search investors
+                            </label>
+
+                            <input type="search"
+                                   id="investorSearch"
+                                   placeholder="Search name or email"
+                                   autocomplete="off">
+                        </div>
+
+                        <span class="investor-total">
+                            <strong th:text="${investorCount}">0</strong>
+                            Investors
+                        </span>
+                    </div>
+                </header>
+
+                <div th:if="${#lists.isEmpty(investors)}"
+                     class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                    <h2>No investors found</h2>
+                    <p>Investor accounts will appear here when registered.</p>
+                </div>
+
+                <div class="investor-grid"
+                     th:unless="${#lists.isEmpty(investors)}">
+
+                    <article class="investor-card"
+                             th:each="investor : ${investors}">
+
+                        <div class="investor-card-header">
+                            <div class="investor-card-avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+
+                            <div class="investor-name">
+                                <span>
+                                    Investor
+                                    #<span th:text="${investor.userId}">0</span>
+                                </span>
+
+                                <h3 th:text="${investor.username}">
+                                    Investor Name
+                                </h3>
+
+                                <p>
+                                    <i class="fa-regular fa-envelope"></i>
+                                    <span th:text="${investor.email != null
+                                                   ? investor.email
+                                                   : 'No email available'}">
+                                        investor@example.com
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="investor-value">
+                            <span>Current portfolio value</span>
+                            <strong th:text="${'₹' + #numbers.formatDecimal(
+                                currentValueByInvestor[investor.userId],
+                                1,
+                                'COMMA',
+                                2,
+                                'POINT'
+                            )}">
+                                ₹0.00
+                            </strong>
+                        </div>
+
+                        <div class="investor-metrics">
+                            <div>
+                                <span>Portfolios</span>
+                                <strong th:text="${portfolioCountByInvestor[
+                                    investor.userId
+                                ]}">
+                                    0
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Assets</span>
+                                <strong th:text="${assetCountByInvestor[
+                                    investor.userId
+                                ]}">
+                                    0
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Invested</span>
+                                <strong th:text="${'₹' + #numbers.formatDecimal(
+                                    investedValueByInvestor[investor.userId],
+                                    1,
+                                    'COMMA',
+                                    2,
+                                    'POINT'
+                                )}">
+                                    ₹0.00
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Profit / loss</span>
+
+                                <strong th:classappend="${profitLossByInvestor[
+                                    investor.userId
+                                ].signum() >= 0
+                                    ? ' positive-text'
+                                    : ' negative-text'}"
+                                        th:text="${(
+                                            profitLossByInvestor[
+                                                investor.userId
+                                            ].signum() >= 0
+                                                ? '+'
+                                                : '-'
+                                            )
+                                            + '₹'
+                                            + #numbers.formatDecimal(
+                                                profitLossByInvestor[
+                                                    investor.userId
+                                                ].abs(),
+                                                1,
+                                                'COMMA',
+                                                2,
+                                                'POINT'
+                                            )}">
+                                    ₹0.00
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="investor-card-actions">
+                            <a th:href="@{/portfolios}"
+                               class="secondary-button">
+                                <i class="fa-solid fa-wallet"></i>
+                                View Portfolios
+                            </a>
+
+                            <a th:href="@{/performance-report(
+                                   investorId=${investor.userId}
+                               )}"
+                               class="report-button">
+                                Report
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                    </article>
+
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script
+        th:src="@{/js/advisor-dashboard.js}"></script>
+
+</body>
+</html>

@@ -1,139 +1,69 @@
-loadUsers();
+document.addEventListener("DOMContentLoaded", () => {
+    const menuButton = document.getElementById("menuButton");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const searchInput = document.getElementById("searchUser");
+    const roleFilter = document.getElementById("roleFilter");
+    const visibleUserCount = document.getElementById("visibleUserCount");
+    const noResults = document.getElementById("noResults");
+    const userRows = Array.from(document.querySelectorAll(".user-row"));
 
-function loadUsers() {
-
-    fetch(
-        "http://localhost:8083/auth/users"
-    )
-
-    .then(response => response.json())
-
-    .then(data => {
-
-        let rows = "";
-
-        let advisorCount = 0;
-        let investorCount = 0;
-
-        data.forEach(user => {
-
-            if(user.role === "ADVISOR"){
-                advisorCount++;
-            }
-
-            if(user.role === "INVESTOR"){
-                investorCount++;
-            }
-
-            rows += `
-            <tr>
-                <td>${user.userId}</td>
-                <td>${user.username}</td>
-                <td>${user.email}</td>
-
-                <td>
-                    <span class="
-                    ${user.role === 'ADVISOR'
-                        ? 'advisor'
-                        : 'investor'} badge">
-
-                        ${user.role}
-
-                    </span>
-                </td>
-
-                <td>
-                    <button
-                        class="delete-btn"
-                        onclick="deleteUser(${user.userId})">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-            `;
-        });
-
-        document.getElementById(
-            "advisorCount"
-        ).textContent = advisorCount;
-
-        document.getElementById(
-            "investorCount"
-        ).textContent = investorCount;
-
-        document.getElementById(
-            "userTable"
-        ).innerHTML = rows;
-    })
-
-    .catch(error => {
-
-        console.error(error);
-
-        alert("Failed to load users");
-    });
-}
-
-function deleteUser(id) {
-
-    if (!confirm(
-        "Are you sure you want to delete this user?"
-    )) {
-        return;
+    function closeSidebar() {
+        document.body.classList.remove("sidebar-open");
     }
 
-    fetch(
-        `http://localhost:8083/auth/user/${id}`,
-        {
-            method: "DELETE"
-        }
-    )
+    function filterUsers() {
+        const searchValue = (searchInput?.value || "").trim().toLowerCase();
+        const selectedRole = roleFilter?.value || "ALL";
+        let visibleCount = 0;
 
-    .then(response => response.text())
+        userRows.forEach(row => {
+            const searchableText = (row.dataset.search || "").toLowerCase();
+            const role = row.dataset.role || "";
+            const matchesSearch = searchableText.includes(searchValue);
+            const matchesRole = selectedRole === "ALL" || role === selectedRole;
+            const shouldShow = matchesSearch && matchesRole;
 
-    .then(message => {
+            row.hidden = !shouldShow;
 
-        alert(message);
+            if (shouldShow) {
+                visibleCount += 1;
+            }
+        });
 
-        loadUsers();
-    })
-
-    .catch(error => {
-
-        console.error(error);
-
-        alert("Delete failed");
-    });
-}
-function searchUser() {
-
-    let input =
-        document.getElementById(
-            "searchUser"
-        ).value.toLowerCase();
-
-    let rows =
-        document.querySelectorAll(
-            "#userTable tr"
-        );
-
-    rows.forEach(row => {
-
-        let username =
-            row.cells[1]
-            .textContent
-            .toLowerCase();
-
-        if (
-            username.includes(input)
-        ) {
-
-            row.style.display = "";
-
-        } else {
-
-            row.style.display = "none";
+        if (visibleUserCount) {
+            visibleUserCount.textContent = String(visibleCount);
         }
 
+        if (noResults) {
+            noResults.hidden = visibleCount > 0 || userRows.length === 0;
+        }
+    }
+
+    menuButton?.addEventListener("click", () => {
+        document.body.classList.toggle("sidebar-open");
     });
-}
+
+    sidebarOverlay?.addEventListener("click", closeSidebar);
+    searchInput?.addEventListener("input", filterUsers);
+    roleFilter?.addEventListener("change", filterUsers);
+
+    document.querySelectorAll(".delete-form").forEach(form => {
+        form.addEventListener("submit", event => {
+            const button = form.querySelector(".delete-button");
+            const username = button?.dataset.username || "this user";
+            const confirmed = window.confirm(
+                `Delete ${username}? This action cannot be undone.`
+            );
+
+            if (!confirmed) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 900) {
+            closeSidebar();
+        }
+    });
+});

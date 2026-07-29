@@ -1,254 +1,115 @@
-const loggedUser =
-    JSON.parse(
-        localStorage.getItem(
-            "loggedUser"
-        )
-    );
+document.addEventListener("DOMContentLoaded", () => {
+    const menuButton = document.getElementById("menuButton");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const passwordToggle = document.getElementById("passwordToggle");
+    const passwordSection = document.getElementById("passwordSection");
+    const profileForm = document.querySelector(".profile-form");
+    const currentPassword = document.getElementById("currentPassword");
+    const newPassword = document.getElementById("newPassword");
+    const confirmPassword = document.getElementById("confirmPassword");
+    const clientPasswordError = document.getElementById("clientPasswordError");
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        if(loggedUser.role === "ADVISOR"){
-
-            document.getElementById(
-                "usersMenu"
-            ).style.display = "none";
-
-            document.getElementById(
-                "transactionsMenu"
-            ).style.display = "none";
-        }
-
-        if(loggedUser.role === "INVESTOR"){
-
-            document.getElementById(
-                "usersMenu"
-            ).style.display = "none";
-        }
-
+    function closeSidebar() {
+        document.body.classList.remove("sidebar-open");
     }
-);
 
-loadProfile();
+    function showPasswordError(message) {
+        if (!clientPasswordError) {
+            return;
+        }
 
-function loadProfile(){
+        clientPasswordError.textContent = message;
+        clientPasswordError.hidden = false;
+    }
 
-    fetch(
-        `http://localhost:8083/auth/profile/${loggedUser.userId}`
-    )
-    .then(response => response.json())
-    .then(user => {
+    function clearPasswordError() {
+        if (!clientPasswordError) {
+            return;
+        }
 
-        document.getElementById(
-            "profileName"
-        ).textContent =
-            user.username;
+        clientPasswordError.textContent = "";
+        clientPasswordError.hidden = true;
+    }
 
-        document.getElementById(
-            "username"
-        ).value =
-            user.username;
-
-        document.getElementById(
-            "email"
-        ).value =
-            user.email;
-
-        document.getElementById(
-            "role"
-        ).textContent =
-            user.role;
+    menuButton?.addEventListener("click", () => {
+        document.body.classList.toggle("sidebar-open");
     });
-}
 
-function updateProfile(){
+    sidebarOverlay?.addEventListener("click", closeSidebar);
 
-    const currentPassword =
-        document.getElementById(
-            "currentPassword"
-        ).value;
+    passwordToggle?.addEventListener("click", () => {
+        const isOpening = passwordSection?.hasAttribute("hidden");
 
-    const newPassword =
-        document.getElementById(
-            "newPassword"
-        ).value;
-
-    const confirmPassword =
-        document.getElementById(
-            "confirmPassword"
-        ).value;
-
-    if(
-        newPassword !==
-        confirmPassword
-    ){
-
-        alert(
-            "Passwords do not match"
-        );
-
-        return;
-    }
-
-    const updatedUser = {
-
-        userId: loggedUser.userId,
-
-        username:
-            document.getElementById(
-                "username"
-            ).value,
-
-        email:
-            document.getElementById(
-                "email"
-            ).value,
-
-        password:
-            document.getElementById(
-                "newPassword"
-            ).value
-    };
-
-
-    fetch(
-        "http://localhost:8083/auth/profile/update",
-        {
-            method:"PUT",
-
-            headers:{
-                "Content-Type":
-                "application/json"
-            },
-
-            body:
-                JSON.stringify(
-                    updatedUser
-                )
+        if (isOpening) {
+            passwordSection?.removeAttribute("hidden");
+            passwordToggle.setAttribute("aria-expanded", "true");
+            currentPassword?.focus();
+        } else {
+            passwordSection?.setAttribute("hidden", "");
+            passwordToggle.setAttribute("aria-expanded", "false");
+            clearPasswordError();
         }
-    )
-    .then(response => response.json())
-    .then(data => {
-
-        localStorage.setItem(
-            "loggedUser",
-            JSON.stringify(data)
-        );
-
-        alert(
-            "Profile Updated Successfully"
-        );
     });
-}
 
-function goToDashboard(){
+    document.querySelectorAll("[data-password-target]").forEach(button => {
+        button.addEventListener("click", () => {
+            const targetId = button.dataset.passwordTarget;
+            const input = document.getElementById(targetId);
+            const icon = button.querySelector("i");
 
-    if(loggedUser.role === "ADMIN"){
+            if (!input) {
+                return;
+            }
 
-        window.location.href =
-            "admin.html";
+            const isPassword = input.type === "password";
+            input.type = isPassword ? "text" : "password";
+            button.setAttribute(
+                "aria-label",
+                `${isPassword ? "Hide" : "Show"} password`
+            );
+            icon?.classList.toggle("fa-eye", !isPassword);
+            icon?.classList.toggle("fa-eye-slash", isPassword);
+        });
+    });
 
-    }
-    else if(loggedUser.role === "ADVISOR"){
+    profileForm?.addEventListener("submit", event => {
+        clearPasswordError();
 
-        window.location.href =
-            "advisor.html";
+        const currentValue = currentPassword?.value || "";
+        const newValue = newPassword?.value || "";
+        const confirmValue = confirmPassword?.value || "";
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
 
-    }
-    else{
+        if (!newValue && !currentValue && !confirmValue) {
+            return;
+        }
 
-        window.location.href =
-            "investor-dashboard.html";
+        if (!currentValue) {
+            event.preventDefault();
+            showPasswordError("Enter your current password to set a new password.");
+            currentPassword?.focus();
+            return;
+        }
 
-    }
-}
+        if (!passwordPattern.test(newValue)) {
+            event.preventDefault();
+            showPasswordError(
+                "Your new password needs an uppercase letter, lowercase letter, number, and at least 6 characters."
+            );
+            newPassword?.focus();
+            return;
+        }
 
-function goToUsers(){
-    window.location.href =
-        "users.html";
-}
+        if (newValue !== confirmValue) {
+            event.preventDefault();
+            showPasswordError("The new password and confirmation do not match.");
+            confirmPassword?.focus();
+        }
+    });
 
-function goToPortfolio(){
-    window.location.href =
-        "portfolio.html";
-}
-
-function goToAssets(){
-    window.location.href =
-        "asset.html";
-}
-
-function goToTransactions(){
-    window.location.href =
-        "transaction.html";
-}
-
-function goToAnalytics(){
-    window.location.href =
-        "performance-report.html";
-}
-
-function logout(){
-
-    localStorage.removeItem(
-        "loggedUser"
-    );
-
-    window.location.href =
-        "login.html";
-}
-function togglePasswordSection(){
-
-    const section =
-        document.getElementById(
-            "passwordSection"
-        );
-
-    if(section.style.display === "block"){
-
-        section.style.display =
-            "none";
-    }
-
-    else{
-
-        section.style.display =
-            "block";
-    }
-}
-function togglePassword(
-    inputId,
-    icon
-){
-
-    const input =
-        document.getElementById(
-            inputId
-        );
-
-    if(input.type === "password"){
-
-        input.type = "text";
-
-        icon.classList.remove(
-            "fa-eye"
-        );
-
-        icon.classList.add(
-            "fa-eye-slash"
-        );
-    }
-    else{
-
-        input.type = "password";
-
-        icon.classList.remove(
-            "fa-eye-slash"
-        );
-
-        icon.classList.add(
-            "fa-eye"
-        );
-    }
-}
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 900) {
+            closeSidebar();
+        }
+    });
+});

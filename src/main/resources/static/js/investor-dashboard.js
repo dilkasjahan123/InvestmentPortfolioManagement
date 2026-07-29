@@ -1,178 +1,74 @@
-const loggedUser =
-    JSON.parse(
-        localStorage.getItem(
-            "loggedUser"
-        )
-    );
+document.addEventListener("DOMContentLoaded", () => {
+    initializeSidebar();
+    initializePortfolioSearch();
+});
 
-const PORTFOLIO_API =
-    "http://localhost:8083/portfolio/all";
+function initializeSidebar() {
+    const menuButton =
+            document.getElementById("menuButton");
 
-const ASSET_API =
-    "http://localhost:8083/assets/all";
+    const sidebar =
+            document.getElementById("dashboardSidebar");
 
-loadDashboard();
+    const overlay =
+            document.getElementById("sidebarOverlay");
 
-async function loadDashboard(){
+    if (!menuButton || !sidebar || !overlay) {
+        return;
+    }
 
-    document.getElementById(
-        "investorName"
-    ).textContent =
-        loggedUser.username;
+    const closeSidebar = () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("visible");
+        document.body.classList.remove("sidebar-open");
+        menuButton.setAttribute("aria-expanded", "false");
+    };
 
-    const portfolios =
-        await fetch(PORTFOLIO_API)
-            .then(r => r.json());
+    menuButton.addEventListener("click", () => {
+        const shouldOpen =
+                !sidebar.classList.contains("open");
 
-    const assets =
-        await fetch(ASSET_API)
-            .then(r => r.json());
-
-    const myPortfolios =
-        portfolios.filter(
-            p =>
-                p.investor.userId ==
-                loggedUser.userId
+        sidebar.classList.toggle("open", shouldOpen);
+        overlay.classList.toggle("visible", shouldOpen);
+        document.body.classList.toggle(
+                "sidebar-open",
+                shouldOpen
         );
-
-    let assetCount = 0;
-    let invested = 0;
-    let current = 0;
-
-    myPortfolios.forEach(portfolio => {
-
-        const portfolioAssets =
-            assets.filter(
-                a =>
-                    a.portfolio.portfolioId ==
-                    portfolio.portfolioId
-            );
-
-        assetCount +=
-            portfolioAssets.length;
-
-        portfolioAssets.forEach(asset => {
-
-            invested +=
-                asset.purchasePrice *
-                asset.quantity;
-
-            current +=
-                asset.currentPrice *
-                asset.quantity;
-        });
-
+        menuButton.setAttribute(
+                "aria-expanded",
+                String(shouldOpen)
+        );
     });
 
-    document.getElementById(
-        "portfolioCount"
-    ).textContent =
-        myPortfolios.length;
+    overlay.addEventListener("click", closeSidebar);
 
-    document.getElementById(
-        "assetCount"
-    ).textContent =
-        assetCount;
-
-    document.getElementById(
-        "investmentValue"
-    ).textContent =
-        "₹" +
-        invested.toFixed(2);
-
-    document.getElementById(
-        "currentValue"
-    ).textContent =
-        "₹" +
-        current.toFixed(2);
-
-    renderPortfolios(
-        myPortfolios
-    );
-}
-
-function renderPortfolios(
-    portfolios
-){
-
-    const container =
-        document.getElementById(
-            "portfolioContainer"
-        );
-
-    container.innerHTML = "";
-
-    portfolios.forEach(
-        portfolio => {
-
-            container.innerHTML += `
-
-            <div class="portfolio-card">
-
-                <h3>
-                    ${portfolio.portfolioName}
-                </h3>
-
-                <p>
-                    Risk Level :
-                    ${portfolio.riskLevel || "N/A"}
-                </p>
-
-                <p>
-                    Current Value :
-                    ₹${portfolio.totalValue}
-                </p>
-
-                <button
-                    onclick="goToAnalytics()">
-
-                    View Analytics
-
-                </button>
-
-            </div>
-
-            `;
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeSidebar();
         }
-    );
+    });
 }
 
-function goToPortfolio(){
+function initializePortfolioSearch() {
+    const searchInput =
+            document.getElementById("portfolioSearch");
 
-    window.location.href =
-        "portfolio.html";
-}
+    if (!searchInput) {
+        return;
+    }
 
-function goToAssets(){
+    searchInput.addEventListener("input", () => {
+        const searchTerm =
+                searchInput.value.trim().toLowerCase();
 
-    window.location.href =
-        "asset.html";
-}
+        document
+            .querySelectorAll(".portfolio-card")
+            .forEach((card) => {
+                const cardText =
+                        card.textContent.toLowerCase();
 
-function goToTransactions(){
-
-    window.location.href =
-        "transaction.html";
-}
-
-function goToAnalytics(){
-
-    window.location.href =
-        "investor-analytics.html";
-}
-
-function goToProfile(){
-
-    window.location.href =
-        "profile.html";
-}
-
-function logout(){
-
-    localStorage.removeItem(
-        "loggedUser"
-    );
-
-    window.location.href =
-        "login.html";
+                card.hidden =
+                        !cardText.includes(searchTerm);
+            });
+    });
 }

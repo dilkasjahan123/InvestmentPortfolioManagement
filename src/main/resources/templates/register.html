@@ -1,321 +1,274 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <meta name="description"
+          content="Create an InvestFlow investor or advisor account.">
+    <title>Create Account | InvestFlow</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="../static/css/register.css">
-
-    <!-- Google Fonts -->
-    <link href="https://apis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
           rel="stylesheet">
-
-
-    <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="auth.css" th:href="@{/css/auth.css}">
 </head>
 
-<body>
+<body class="auth-page register-page">
 
-<div class="background"></div>
+<div class="ambient-shape shape-one"></div>
+<div class="ambient-shape shape-two"></div>
+<div class="ambient-grid"></div>
 
-<div class="register-card">
+<main class="auth-shell register-shell">
 
-    <div class="logo">
-        <i class="fas fa-user-plus"></i>
-    </div>
+    <section class="auth-showcase register-showcase">
+        <a class="auth-brand" th:href="@{/}">
+            <span class="brand-symbol">
+                <i class="fa-solid fa-chart-line"></i>
+            </span>
+            <span>
+                <strong>InvestFlow</strong>
+                <small>Wealth workspace</small>
+            </span>
+        </a>
 
-    <h2>Create Account</h2>
+        <div class="showcase-copy">
+            <span class="showcase-label">
+                <i class="fa-solid fa-sparkles"></i>
+                Start your investment workspace
+            </span>
 
-    <p class="subtitle">
-        Join Investment Portfolio Management System
-    </p>
+            <h1>
+                Build a clearer view of
+                <span>your financial future.</span>
+            </h1>
 
-    <form id="registerForm">
+            <p>
+                Create an investor or advisor account and access the tools
+                designed for your role.
+            </p>
 
-        <div class="input-group">
+            <div class="role-preview">
+                <article>
+                    <span class="role-preview-icon investor">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </span>
+                    <div>
+                        <strong>Investor account</strong>
+                        <p>Manage portfolios, assets, and personal performance.</p>
+                    </div>
+                </article>
 
-            <label for="username" hidden>Username</label>
-
-            <i class="fas fa-user"></i>
-
-            <input
-                    type="text"
-                    id="username"
-                    placeholder="Username"
-                    required>
+                <article>
+                    <span class="role-preview-icon advisor">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </span>
+                    <div>
+                        <strong>Advisor account</strong>
+                        <p>Review investors, holdings, and portfolio performance.</p>
+                    </div>
+                </article>
+            </div>
         </div>
-        <small id="usernameError"
-               class="error-message"></small>
 
-        <div class="input-group">
-
-            <label for="email" hidden>Email</label>
-
-            <i class="fas fa-envelope"></i>
-
-            <input
-                    type="email"
-                    id="email"
-                    placeholder="Email"
-                    required>
+        <div class="showcase-footer">
+            <div class="trust-stack">
+                <span><i class="fa-solid fa-lock"></i></span>
+                <span><i class="fa-solid fa-user-shield"></i></span>
+                <span><i class="fa-solid fa-check"></i></span>
+            </div>
+            <p>
+                <strong>Administrator registration is protected</strong>
+                <small>Public registration is available only for investors and advisors.</small>
+            </p>
         </div>
-        <small id="emailError"
-               class="error-message"></small>
+    </section>
 
-
-        <div class="input-group">
-
-            <label for="role" hidden>Role</label>
-
-            <i class="fas fa-user-tag"></i>
-
-            <select id="role" required>
-                <option value="">Select Role</option>
-                <option value="ADVISOR">Advisor</option>
-                <option value="INVESTOR">Investor</option>
-            </select>
-
+    <section class="auth-form-panel">
+        <div class="mobile-brand">
+            <span class="brand-symbol">
+                <i class="fa-solid fa-chart-line"></i>
+            </span>
+            <strong>InvestFlow</strong>
         </div>
-        <small id="roleError"
-               class="error-message"></small>
 
-        <div class="input-group">
+        <div class="auth-card register-card">
+            <div class="auth-heading register-heading">
+                <span class="welcome-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </span>
+                <span class="section-kicker">CREATE ACCOUNT</span>
+                <h2>Join InvestFlow</h2>
+                <p>Complete the details below to create your workspace.</p>
+            </div>
 
-            <label for="password" hidden>Password</label>
+            <div th:if="${success}"
+                 class="server-alert success-alert"
+                 role="status"
+                 style="display: none"
+                 th:style="'display:flex'">
+                <i class="fa-solid fa-circle-check"></i>
+                <span th:text="${success}">Account created successfully.</span>
+            </div>
 
-            <i class="fas fa-lock"></i>
+            <div th:if="${error}"
+                 class="server-alert error-alert"
+                 role="alert"
+                 style="display: none"
+                 th:style="'display:flex'">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span th:text="${error}">Unable to create account.</span>
+            </div>
 
-            <input
-                    type="password"
-                    id="password"
-                    placeholder="Password"
-                    required>
+            <form class="auth-form"
+                  id="registerForm"
+                  th:action="@{/register}"
+                  th:object="${user}"
+                  method="post"
+                  novalidate>
 
-            <i class="fas fa-eye toggle"
-               onclick="togglePassword('password')"></i>
+                <div class="registration-grid">
+                    <div class="field-group">
+                        <label for="username">Username</label>
+                        <div class="field-control">
+                            <i class="fa-regular fa-user leading-icon"></i>
+                            <input type="text"
+                                   id="username"
+                                   th:field="*{username}"
+                                   placeholder="Choose a username"
+                                   autocomplete="username"
+                                   minlength="3"
+                                   maxlength="30"
+                                   autofocus
+                                   required>
+                        </div>
+                        <small class="field-error"
+                               id="usernameError"
+                               role="alert"></small>
+                    </div>
 
+                    <div class="field-group">
+                        <label for="email">Email address</label>
+                        <div class="field-control">
+                            <i class="fa-regular fa-envelope leading-icon"></i>
+                            <input type="email"
+                                   id="email"
+                                   th:field="*{email}"
+                                   placeholder="name@example.com"
+                                   autocomplete="email"
+                                   required>
+                        </div>
+                        <small class="field-error"
+                               id="emailError"
+                               role="alert"></small>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label for="role">Choose your account role</label>
+                    <div class="field-control select-field">
+                        <i class="fa-solid fa-user-tag leading-icon"></i>
+                        <select id="role"
+                                th:field="*{role}"
+                                required>
+                            <option value="">Select investor or advisor</option>
+                            <option value="INVESTOR">Investor</option>
+                            <option value="ADVISOR">Advisor</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                    </div>
+                    <small class="field-error"
+                           id="roleError"
+                           role="alert"></small>
+                </div>
+
+                <div class="registration-grid">
+                    <div class="field-group">
+                        <label for="password">Password</label>
+                        <div class="field-control">
+                            <i class="fa-solid fa-lock leading-icon"></i>
+                            <input type="password"
+                                   id="password"
+                                   th:field="*{password}"
+                                   placeholder="Create a password"
+                                   autocomplete="new-password"
+                                   required>
+
+                            <button type="button"
+                                    class="password-visibility"
+                                    data-password-target="password"
+                                    aria-label="Show password">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="field-error"
+                               id="passwordError"
+                               role="alert"></small>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="confirmPassword">Confirm password</label>
+                        <div class="field-control">
+                            <i class="fa-solid fa-lock leading-icon"></i>
+                            <input type="password"
+                                   id="confirmPassword"
+                                   placeholder="Repeat your password"
+                                   autocomplete="new-password"
+                                   required>
+
+                            <button type="button"
+                                    class="password-visibility"
+                                    data-password-target="confirmPassword"
+                                    aria-label="Show confirmed password">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="field-error"
+                               id="confirmPasswordError"
+                               role="alert"></small>
+                    </div>
+                </div>
+
+                <div class="password-checklist" aria-label="Password requirements">
+                    <span data-requirement="length">
+                        <i class="fa-solid fa-circle"></i>
+                        6+ characters
+                    </span>
+                    <span data-requirement="uppercase">
+                        <i class="fa-solid fa-circle"></i>
+                        Uppercase
+                    </span>
+                    <span data-requirement="lowercase">
+                        <i class="fa-solid fa-circle"></i>
+                        Lowercase
+                    </span>
+                    <span data-requirement="number">
+                        <i class="fa-solid fa-circle"></i>
+                        Number
+                    </span>
+                </div>
+
+                <button type="submit" class="primary-auth-button" id="registerButton">
+                    <span>Create account</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <p class="switch-auth-copy">
+                Already have an account?
+                <a th:href="@{/}">
+                    Sign in
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </p>
         </div>
-        <small id="passwordError" class="error-message"></small>
+    </section>
+</main>
 
-        <div class="input-group">
-
-            <label for="confirmPassword" hidden>Confirm Password</label>
-
-            <i class="fas fa-lock"></i>
-
-            <input
-                    type="password"
-                    id="confirmPassword"
-                    placeholder="Confirm Password"
-                    required>
-
-            <i class="fas fa-eye toggle"
-               onclick="togglePassword('confirmPassword')"></i>
-
-        </div>
-        <small id="confirmPasswordError"
-               class="error-message"></small>
-
-        <button type="submit" class="register-btn">
-            Register
-        </button>
-        <small id="registerError"
-               class="error-message"></small>
-
-    </form>
-
-    <p class="login-link">
-        Already have an account?
-        <a href="login.html">Login</a>
-    </p>
-
-</div>
-
-<script>
-
-    function togglePassword(id) {
-
-        const field =
-            document.getElementById(id);
-
-        field.type =
-            field.type === "password"
-                ? "text"
-                : "password";
-    }
-
-    document.getElementById("registerForm")
-        .addEventListener("submit", function (event) {
-
-            event.preventDefault();
-
-            document.getElementById("usernameError").textContent = "";
-            document.getElementById("emailError").textContent = "";
-            document.getElementById("roleError").textContent = "";
-            document.getElementById("passwordError").textContent = "";
-            document.getElementById("confirmPasswordError").textContent = "";
-            document.getElementById("registerError").textContent = "";
-
-            let username =
-                document.getElementById("username")
-                    .value.trim();
-
-            let email =
-                document.getElementById("email")
-                    .value.trim();
-
-            let role =
-                document.getElementById("role")
-                    .value;
-
-            let password =
-                document.getElementById("password")
-                    .value;
-
-            let confirmPassword =
-                document.getElementById("confirmPassword")
-                    .value;
-
-            if (username === "") {
-
-                document.getElementById(
-                    "usernameError"
-                ).textContent =
-                    "Username is required";
-
-                return;
-            }
-
-            if (email === "") {
-
-                document.getElementById(
-                    "emailError"
-                ).textContent =
-                    "Email is required";
-
-                return;
-            }
-
-            if (role === "") {
-
-                document.getElementById(
-                    "roleError"
-                ).textContent =
-                    "Please select a role";
-
-                return;
-            }
-
-            if (password === "") {
-
-                document.getElementById(
-                    "passwordError"
-                ).textContent =
-                    "Password is required";
-
-                return;
-            }
-
-            const passwordPattern =
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
-
-            if (!passwordPattern.test(password)) {
-
-                document.getElementById(
-                    "passwordError"
-                ).textContent =
-                    "Password must contain at least 6 characters, one uppercase letter, one lowercase letter and one number.";
-
-                return;
-            }
-
-            if (password !== confirmPassword) {
-
-                document.getElementById(
-                    "confirmPasswordError"
-                ).textContent =
-                    "Passwords do not match";
-
-                return;
-            }
-
-            const user = {
-
-                username: username,
-                email: email,
-                password: password,
-                role: role.toUpperCase()
-            };
-
-            fetch(
-                "http://localhost:8083/auth/register",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:
-                        JSON.stringify(user)
-                }
-            )
-
-            .then(response => {
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Registration Failed"
-                    );
-                }
-
-                return response.json();
-            })
-
-            .then(data => {
-
-                const message =
-                    document.getElementById(
-                        "registerError"
-                    );
-
-                message.style.color =
-                    "#22c55e";
-
-                message.textContent =
-                    "Registration successful. Redirecting to login...";
-
-                setTimeout(() => {
-
-                    window.location.href =
-                        "login.html";
-
-                }, 1500);
-
-            })
-
-            .catch(error => {
-
-                document.getElementById(
-                    "registerError"
-                ).textContent =
-                    "Registration failed. Username may already exist.";
-
-            });
-
-        });
-
-</script>
-
-
+<script th:src="@{/js/register.js}"></script>
 </body>
 </html>
-

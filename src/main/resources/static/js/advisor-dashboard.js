@@ -1,180 +1,74 @@
-const USER_API =
-    "http://localhost:8083/auth/users";
+document.addEventListener("DOMContentLoaded", () => {
+    initializeAdvisorSidebar();
+    initializeInvestorSearch();
+});
 
-const PORTFOLIO_API =
-    "http://localhost:8083/portfolio/all";
+function initializeAdvisorSidebar() {
+    const menuButton =
+            document.getElementById("menuButton");
 
-const ASSET_API =
-    "http://localhost:8083/assets/all";
+    const sidebar =
+            document.getElementById("advisorSidebar");
 
-loadDashboard();
-const loggedUser =
-    JSON.parse(
-        localStorage.getItem(
-            "loggedUser"
-        )
-    );
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+    const overlay =
+            document.getElementById("sidebarOverlay");
 
-        document.getElementById(
-            "welcomeMessage"
-        ).textContent =
-            `Welcome, ${loggedUser.username}`;
-
+    if (!menuButton || !sidebar || !overlay) {
+        return;
     }
-);
 
-async function loadDashboard(){
+    const closeSidebar = () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("visible");
+        document.body.classList.remove("sidebar-open");
+        menuButton.setAttribute("aria-expanded", "false");
+    };
 
-    const users =
-        await fetch(USER_API)
-            .then(r => r.json());
+    menuButton.addEventListener("click", () => {
+        const shouldOpen =
+                !sidebar.classList.contains("open");
 
-    const portfolios =
-        await fetch(PORTFOLIO_API)
-            .then(r => r.json());
-
-    const assets =
-        await fetch(ASSET_API)
-            .then(r => r.json());
-
-    const investors =
-        users.filter(
-            user =>
-                user.role === "INVESTOR"
+        sidebar.classList.toggle("open", shouldOpen);
+        overlay.classList.toggle("visible", shouldOpen);
+        document.body.classList.toggle(
+                "sidebar-open",
+                shouldOpen
         );
-
-    document.getElementById(
-        "investorCount"
-    ).textContent =
-        investors.length;
-
-    document.getElementById(
-        "portfolioCount"
-    ).textContent =
-        portfolios.length;
-
-    document.getElementById(
-        "assetCount"
-    ).textContent =
-        assets.length;
-
-    let totalValue = 0;
-
-    portfolios.forEach(portfolio => {
-
-        totalValue +=
-            Number(portfolio.totalValue);
+        menuButton.setAttribute(
+                "aria-expanded",
+                String(shouldOpen)
+        );
     });
 
-    document.getElementById(
-        "totalValue"
-    ).textContent =
-        "₹" +
-        totalValue.toLocaleString(
-            "en-IN"
-        );
+    overlay.addEventListener("click", closeSidebar);
 
-    renderInvestorSummary(
-        investors,
-        portfolios
-    );
-}
-
-function renderInvestorSummary(
-    investors,
-    portfolios
-){
-
-    const container =
-        document.getElementById(
-            "investorContainer"
-        );
-
-    container.innerHTML = "";
-
-    investors.forEach(investor => {
-
-        const investorPortfolios =
-            portfolios.filter(
-                p =>
-                    p.investor &&
-                    p.investor.userId ===
-                    investor.userId
-            );
-
-        let totalValue = 0;
-
-        investorPortfolios.forEach(
-            portfolio => {
-
-            totalValue +=
-                Number(
-                    portfolio.totalValue
-                );
-        });
-
-        container.innerHTML += `
-
-        <div class="investor-card">
-
-            <h3>
-                ${investor.username}
-            </h3>
-
-            <p>
-                Email:
-                ${investor.email}
-            </p>
-
-            <p>
-                Portfolios:
-                ${investorPortfolios.length}
-            </p>
-
-            <p>
-                Total Value:
-                ₹${totalValue.toLocaleString("en-IN")}
-            </p>
-
-        </div>
-
-        `;
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeSidebar();
+        }
     });
 }
 
-function goToPortfolio(){
+function initializeInvestorSearch() {
+    const searchInput =
+            document.getElementById("investorSearch");
 
-    window.location.href =
-        "portfolio.html";
-}
+    if (!searchInput) {
+        return;
+    }
 
-function goToAssets(){
+    searchInput.addEventListener("input", () => {
+        const searchTerm =
+                searchInput.value.trim().toLowerCase();
 
-    window.location.href =
-        "asset.html";
-}
+        document
+            .querySelectorAll(".investor-card")
+            .forEach((card) => {
+                const cardText =
+                        card.textContent.toLowerCase();
 
-function goToPerformanceReport(){
-
-    window.location.href =
-        "performance-report.html";
-}
-
-function goToProfile(){
-
-    window.location.href =
-        "profile.html";
-}
-
-function logout(){
-
-    localStorage.removeItem(
-        "loggedUser"
-    );
-
-    window.location.href =
-        "login.html";
+                card.hidden =
+                        !cardText.includes(searchTerm);
+            });
+    });
 }

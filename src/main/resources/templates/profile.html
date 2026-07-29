@@ -1,195 +1,425 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | InvestFlow</title>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Profile</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <link rel="stylesheet" href="../static/css/profile.css">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="admin.css" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" href="profile.css" th:href="@{/css/profile.css}">
 </head>
 
 <body>
 
-<div class="container">
+<div class="app-shell">
 
-    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <a class="brand"
+           th:href="${user.role.name() == 'ADMIN' ? '/admin'
+                    : (user.role.name() == 'ADVISOR' ? '/advisor' : '/investor')}">
+            <span class="brand-mark">
+                <i class="fa-solid fa-chart-line"></i>
+            </span>
+            <span>
+                <strong>InvestFlow</strong>
+                <small th:text="${user.role.name() == 'ADMIN' ? 'Admin workspace'
+                        : (user.role.name() == 'ADVISOR'
+                        ? 'Advisor workspace' : 'Investor workspace')}">
+                    Wealth workspace
+                </small>
+            </span>
+        </a>
 
-    <div class="sidebar">
+        <nav class="side-nav" aria-label="Main navigation">
+            <p class="nav-label">Workspace</p>
 
-        <div class="logo">
+            <a class="nav-link"
+               th:if="${user.role.name() == 'ADMIN'}"
+               th:href="@{/admin}">
+                <i class="fa-solid fa-grid-2"></i>
+                <span>Dashboard</span>
+            </a>
 
-            <i class="fas fa-chart-line"></i>
+            <a class="nav-link"
+               th:if="${user.role.name() == 'ADVISOR'}"
+               th:href="@{/advisor}">
+                <i class="fa-solid fa-grid-2"></i>
+                <span>Dashboard</span>
+            </a>
 
-            <h2>IPMS</h2>
+            <a class="nav-link"
+               th:if="${user.role.name() == 'INVESTOR'}"
+               th:href="@{/investor}">
+                <i class="fa-solid fa-grid-2"></i>
+                <span>Dashboard</span>
+            </a>
 
-        </div>
+            <a class="nav-link"
+               th:if="${user.role.name() == 'ADMIN'}"
+               th:href="@{/users}">
+                <i class="fa-solid fa-users"></i>
+                <span>Users</span>
+            </a>
 
-        <ul>
+            <a class="nav-link" th:href="@{/portfolios}">
+                <i class="fa-solid fa-briefcase"></i>
+                <span th:text="${user.role.name() == 'INVESTOR'
+                        ? 'My portfolios' : 'Portfolios'}">Portfolios</span>
+            </a>
 
-            <li onclick="goToDashboard()">
-                <i class="fas fa-home"></i>
-                Dashboard
-            </li>
+            <a class="nav-link" th:href="@{/assets}">
+                <i class="fa-solid fa-layer-group"></i>
+                <span th:text="${user.role.name() == 'INVESTOR'
+                        ? 'My assets' : 'Assets'}">Assets</span>
+            </a>
 
-            <li id="usersMenu" onclick="goToUsers()">
-                <i class="fas fa-users"></i>
-                Users
-            </li>
+            <p class="nav-label nav-label-spaced">Account</p>
 
-            <li onclick="goToPortfolio()">
-                <i class="fas fa-wallet"></i>
-                Portfolios
-            </li>
+            <a class="nav-link"
+               th:if="${user.role.name() != 'ADVISOR'}"
+               th:href="@{/transactions}">
+                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                <span>Transactions</span>
+            </a>
 
-            <li onclick="goToAssets()">
-                <i class="fas fa-coins"></i>
-                Assets
-            </li>
+            <a class="nav-link" th:href="@{/performance-report}">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Analytics</span>
+            </a>
 
-            <li id="transactionsMenu" onclick="goToTransactions()">
-                <i class="fas fa-money-bill-transfer"></i>
-                Transactions
-            </li>
+            <a class="nav-link active" th:href="@{/profile}">
+                <i class="fa-regular fa-user"></i>
+                <span>My profile</span>
+            </a>
+        </nav>
 
-            <li onclick="goToAnalytics()">
-                <i class="fas fa-chart-pie"></i>
-                Analytics
-            </li>
-
-            <li class="active">
-                <i class="fas fa-user"></i>
-                Profile
-            </li>
-
-            <li onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i>
-                Logout
-            </li>
-
-        </ul>
-
-    </div>
-
-    <!-- Main Content -->
-
-    <div class="main-content">
-
-        <div class="profile-card">
-
-            <div class="profile-header">
-
-                <i class="fas fa-user-circle"></i>
-
-                <h2 id="profileName">
-                    Profile
-                </h2>
-
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <span class="avatar"
+                      th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}">U</span>
+                <span class="sidebar-user-copy">
+                    <strong th:text="${user.username}">Username</strong>
+                    <small th:text="${#strings.capitalize(
+                            #strings.toLowerCase(user.role.name()))}">Role</small>
+                </span>
             </div>
 
-            <div class="profile-form">
-
-                <label>
-                    Username
-                </label>
-
-                <input type="text"
-                       id="username">
-
-                <label>
-                    Email
-                </label>
-
-                <input type="email"
-                       id="email">
-
-                <label>
-                    Role
-                </label>
-
-                <div id="role"
-                     class="role-badge">
-                </div>
-
-                <hr>
-
-                <hr>
-
-                <button
-                        type="button"
-                        class="password-btn"
-                        onclick="togglePasswordSection()">
-
-                    <i class="fas fa-key"></i>
-                    Change Password
-
+            <form th:action="@{/logout}" method="post">
+                <button class="logout-button" type="submit" aria-label="Log out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
+            </form>
+        </div>
+    </aside>
 
-                <div id="passwordSection"
-                     class="password-section">
+    <button class="sidebar-overlay" id="sidebarOverlay"
+            type="button" aria-label="Close navigation"></button>
 
-                    <div class="password-field">
+    <main class="main-content">
 
-                        <input
-                                type="password"
-                                id="currentPassword"
-                                placeholder="Current Password">
+        <header class="topbar">
+            <button class="menu-button" id="menuButton"
+                    type="button" aria-label="Open navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
 
-                        <i class="fas fa-eye"
-                           onclick="togglePassword('currentPassword', this)"></i>
-
-                    </div>
-
-                    <div class="password-field">
-
-                        <input
-                                type="password"
-                                id="newPassword"
-                                placeholder="New Password">
-
-                        <i class="fas fa-eye"
-                           onclick="togglePassword('newPassword', this)"></i>
-
-                    </div>
-
-                    <div class="password-field">
-
-                        <input
-                                type="password"
-                                id="confirmPassword"
-                                placeholder="Confirm Password">
-
-                        <i class="fas fa-eye"
-                           onclick="togglePassword('confirmPassword', this)"></i>
-
-                    </div>
-
-                </div>
-                <button onclick="updateProfile()">
-
-                    <i class="fas fa-save"></i>
-
-                    Update Profile
-
-                </button>
-
+            <div class="topbar-copy">
+                <span class="eyebrow">ACCOUNT SETTINGS</span>
+                <h1>My profile</h1>
             </div>
 
+            <div class="topbar-actions">
+                <a class="back-link"
+                   th:if="${user.role.name() == 'ADMIN'}"
+                   th:href="@{/admin}">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Dashboard
+                </a>
+
+                <a class="back-link"
+                   th:if="${user.role.name() == 'ADVISOR'}"
+                   th:href="@{/advisor}">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Dashboard
+                </a>
+
+                <a class="back-link"
+                   th:if="${user.role.name() == 'INVESTOR'}"
+                   th:href="@{/investor}">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Dashboard
+                </a>
+
+                <div class="profile-chip static-chip">
+                    <span class="avatar"
+                          th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}">U</span>
+                    <span>
+                        <strong th:text="${user.username}">Username</strong>
+                        <small th:text="${user.email}">user@example.com</small>
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-content profile-page">
+
+            <div th:if="${success}" class="alert success-alert" role="status">
+                <i class="fa-solid fa-circle-check"></i>
+                <span th:text="${success}">Profile updated successfully.</span>
+            </div>
+
+            <div th:if="${error}" class="alert error-alert" role="alert">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span th:text="${error}">Unable to update profile.</span>
+            </div>
+
+            <section class="profile-layout">
+
+                <aside class="identity-panel">
+                    <div class="identity-cover"></div>
+
+                    <div class="identity-content">
+                        <span class="large-avatar"
+                              th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}">U</span>
+
+                        <h2 th:text="${user.username}">Username</h2>
+                        <p th:text="${user.email}">user@example.com</p>
+
+                        <span class="profile-role"
+                              th:classappend="${#strings.toLowerCase(user.role.name())}">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span th:text="${#strings.capitalize(
+                                    #strings.toLowerCase(user.role.name()))}">Role</span>
+                        </span>
+
+                        <div class="identity-details">
+                            <div>
+                                <span class="detail-icon">
+                                    <i class="fa-regular fa-id-card"></i>
+                                </span>
+                                <span>
+                                    <small>Account ID</small>
+                                    <strong>
+                                        #<span th:text="${user.userId}">0</span>
+                                    </strong>
+                                </span>
+                            </div>
+
+                            <div>
+                                <span class="detail-icon">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </span>
+                                <span>
+                                    <small>Access level</small>
+                                    <strong th:text="${user.role}">ROLE</strong>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="security-note">
+                            <i class="fa-solid fa-lock"></i>
+                            <span>
+                                <strong>Protected account</strong>
+                                <small>Your password is never shown on this page.</small>
+                            </span>
+                        </div>
+                    </div>
+                </aside>
+
+                <section class="settings-panel">
+                    <div class="settings-heading">
+                        <div>
+                            <span class="section-kicker">PERSONAL INFORMATION</span>
+                            <h2>Profile settings</h2>
+                            <p>Keep your account information accurate and up to date.</p>
+                        </div>
+
+                        <span class="verified-chip">
+                            <i class="fa-solid fa-shield-check"></i>
+                            Verified account
+                        </span>
+                    </div>
+
+                    <form class="profile-form"
+                          th:action="@{/profile/update}"
+                          th:object="${user}"
+                          method="post"
+                          novalidate>
+
+                        <input type="hidden" th:field="*{userId}">
+                        <input type="hidden" th:field="*{role}">
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <div class="input-shell">
+                                    <i class="fa-regular fa-user"></i>
+                                    <input id="username"
+                                           type="text"
+                                           th:field="*{username}"
+                                           autocomplete="username"
+                                           minlength="3"
+                                           required>
+                                </div>
+                                <small>Your name as it appears across InvestFlow.</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <div class="input-shell">
+                                    <i class="fa-regular fa-envelope"></i>
+                                    <input id="email"
+                                           type="email"
+                                           th:field="*{email}"
+                                           autocomplete="email"
+                                           required>
+                                </div>
+                                <small>Used for account and investment notifications.</small>
+                            </div>
+                        </div>
+
+                        <div class="role-field">
+                            <div>
+                                <span class="role-field-icon">
+                                    <i class="fa-solid fa-key"></i>
+                                </span>
+                                <span>
+                                    <small>Assigned role</small>
+                                    <strong th:text="${#strings.capitalize(
+                                            #strings.toLowerCase(user.role.name()))}">
+                                        Investor
+                                    </strong>
+                                </span>
+                            </div>
+                            <span>Your role can only be changed by an administrator.</span>
+                        </div>
+
+                        <div class="section-divider">
+                            <span>Security</span>
+                        </div>
+
+                        <button class="password-toggle"
+                                id="passwordToggle"
+                                type="button"
+                                aria-expanded="false"
+                                aria-controls="passwordSection">
+                            <span class="password-toggle-icon">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
+                            <span>
+                                <strong>Change password</strong>
+                                <small>Use your current password to set a new one.</small>
+                            </span>
+                            <i class="fa-solid fa-chevron-down toggle-chevron"></i>
+                        </button>
+
+                        <div class="password-section" id="passwordSection" hidden>
+                            <div class="password-grid">
+                                <div class="form-group full-width">
+                                    <label for="currentPassword">Current password</label>
+                                    <div class="input-shell password-input">
+                                        <i class="fa-solid fa-key"></i>
+                                        <input id="currentPassword"
+                                               name="currentPassword"
+                                               type="password"
+                                               autocomplete="current-password"
+                                               placeholder="Enter current password">
+                                        <button type="button"
+                                                class="visibility-button"
+                                                data-password-target="currentPassword"
+                                                aria-label="Show current password">
+                                            <i class="fa-regular fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="newPassword">New password</label>
+                                    <div class="input-shell password-input">
+                                        <i class="fa-solid fa-lock"></i>
+                                        <input id="newPassword"
+                                               type="password"
+                                               th:field="*{password}"
+                                               autocomplete="new-password"
+                                               placeholder="Enter new password">
+                                        <button type="button"
+                                                class="visibility-button"
+                                                data-password-target="newPassword"
+                                                aria-label="Show new password">
+                                            <i class="fa-regular fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm new password</label>
+                                    <div class="input-shell password-input">
+                                        <i class="fa-solid fa-lock"></i>
+                                        <input id="confirmPassword"
+                                               type="password"
+                                               autocomplete="new-password"
+                                               placeholder="Repeat new password">
+                                        <button type="button"
+                                                class="visibility-button"
+                                                data-password-target="confirmPassword"
+                                                aria-label="Show confirmed password">
+                                            <i class="fa-regular fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="password-requirements">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <span>
+                                    Use at least 6 characters with an uppercase letter,
+                                    lowercase letter, and number.
+                                </span>
+                            </div>
+
+                            <div class="client-error"
+                                 id="clientPasswordError"
+                                 role="alert"
+                                 hidden>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <a th:if="${user.role.name() == 'ADMIN'}"
+                               th:href="@{/admin}"
+                               class="cancel-button">
+                                Cancel
+                            </a>
+                            <a th:if="${user.role.name() == 'ADVISOR'}"
+                               th:href="@{/advisor}"
+                               class="cancel-button">
+                                Cancel
+                            </a>
+                            <a th:if="${user.role.name() == 'INVESTOR'}"
+                               th:href="@{/investor}"
+                               class="cancel-button">
+                                Cancel
+                            </a>
+
+                            <button type="submit" class="save-button">
+                                <i class="fa-solid fa-check"></i>
+                                Save changes
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </section>
         </div>
-
-    </div>
-
+    </main>
 </div>
 
-<script src="../static/js/profile.js"></script>
-
+<script th:src="@{/js/profile.js}"></script>
 </body>
-
 </html>

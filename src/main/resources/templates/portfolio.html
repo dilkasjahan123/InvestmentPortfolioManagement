@@ -1,167 +1,368 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Portfolio Management</title>
 
-    <link rel="stylesheet"
-          href="../static/css/portfolio.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <link rel="stylesheet" th:href="@{/css/portfolio.css}">
 </head>
 
 <body>
 
-<div class="container">
+<div class="background-glow background-glow-left"></div>
+<div class="background-glow background-glow-right"></div>
 
-    <div class="header">
+<main class="dashboard-shell">
 
-        <div>
+    <header class="dashboard-header">
 
-            <h1>
-                <i class="fas fa-wallet"></i>
-                Portfolio Management
-            </h1>
+        <div class="brand-section">
+            <div class="brand-icon">
+                <i class="fa-solid fa-chart-pie"></i>
+            </div>
 
-            <p>
-                Manage investment portfolios
-            </p>
+            <div>
+                <p class="eyebrow">Investment workspace</p>
+                <h1>Portfolio Management</h1>
+                <p class="page-description">
+                    Monitor performance, risk and investor portfolios.
+                </p>
+            </div>
+        </div>
+
+        <div class="header-actions">
+
+            <div class="user-chip">
+                <div class="user-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div class="user-details">
+                    <strong th:text="${user.username}">Username</strong>
+                    <span th:text="${user.role}">Role</span>
+                </div>
+            </div>
+
+            <a th:if="${user.role.name() != 'ADVISOR'}"
+               th:href="@{/portfolio/add}"
+               class="primary-button">
+
+                <i class="fa-solid fa-plus"></i>
+                <span>Create Portfolio</span>
+
+            </a>
 
         </div>
 
-        <button
-                id="addPortfolioBtn"
-                class="create-btn"
-                onclick="openModal()">
+    </header>
 
-            + Create Portfolio
+    <div th:if="${success}"
+         class="alert alert-success"
+         role="status">
 
-        </button>
+        <i class="fa-solid fa-circle-check"></i>
+        <span th:text="${success}">Operation completed successfully.</span>
 
     </div>
 
-    <div class="stats">
+    <div th:if="${error}"
+         class="alert alert-error"
+         role="alert">
 
-        <div class="stat-card">
-            <h3 id="totalPortfolioCount">0</h3>
-            <p>Total Portfolios</p>
-        </div>
-
-        <div class="stat-card high-card">
-            <h3 id="highRiskCount">0</h3>
-            <p>High Risk</p>
-        </div>
-
-        <div class="stat-card medium-card">
-            <h3 id="mediumRiskCount">0</h3>
-            <p>Medium Risk</p>
-        </div>
-
-        <div class="stat-card low-card">
-            <h3 id="lowRiskCount">0</h3>
-            <p>Low Risk</p>
-        </div>
-
-    </div>
-    <div class="search-section">
-
-        <i class="fas fa-search"></i>
-
-        <input
-                type="text"
-                id="searchPortfolio"
-                placeholder="Search Portfolio..."
-                onkeyup="searchPortfolio()">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span th:text="${error}">Something went wrong.</span>
 
     </div>
 
-    <div id="portfolioContainer"
-         class="portfolio-grid">
+    <section class="stats-grid" aria-label="Portfolio statistics">
 
-    </div>
-    <div id="emptyState"></div>
+        <article class="stat-card stat-total">
+            <div class="stat-icon">
+                <i class="fa-solid fa-layer-group"></i>
+            </div>
 
-</div>
+            <div class="stat-content">
+                <p>Total portfolios</p>
+                <h2 th:text="${portfolioCount}">0</h2>
+                <span>Across all investors</span>
+            </div>
+        </article>
 
+        <article class="stat-card stat-high">
+            <div class="stat-icon">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+            </div>
 
-<!-- Modal -->
+            <div class="stat-content">
+                <p>High risk</p>
+                <h2 th:text="${highRiskCount}">0</h2>
+                <span>Aggressive portfolios</span>
+            </div>
+        </article>
 
-<div id="portfolioModal"
-     class="modal">
+        <article class="stat-card stat-medium">
+            <div class="stat-icon">
+                <i class="fa-solid fa-scale-balanced"></i>
+            </div>
 
-    <div class="modal-content">
+            <div class="stat-content">
+                <p>Medium risk</p>
+                <h2 th:text="${mediumRiskCount}">0</h2>
+                <span>Balanced portfolios</span>
+            </div>
+        </article>
 
-        <h2>Portfolio Details</h2>
+        <article class="stat-card stat-low">
+            <div class="stat-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
 
-        <form id="portfolioForm">
+            <div class="stat-content">
+                <p>Low risk</p>
+                <h2 th:text="${lowRiskCount}">0</h2>
+                <span>Conservative portfolios</span>
+            </div>
+        </article>
 
-            <input type="text"
-                   id="portfolioName"
-                   placeholder="Portfolio Name"
-                   required>
+    </section>
 
-            <select id="investorId"
-                    required>
+    <section class="content-panel">
 
-                <option value="">
-                    Select Investor
-                </option>
+        <div class="content-toolbar">
 
-            </select>
+            <div>
+                <p class="eyebrow">Portfolio directory</p>
+                <h2>Investor portfolios</h2>
+                <p>Browse portfolios grouped by their assigned investor.</p>
+            </div>
 
-            <select id="riskLevel"
-                    required>
+            <div class="search-box"
+                 th:unless="${#lists.isEmpty(portfolios)}">
 
-                <option value="">
-                    Select Risk Level
-                </option>
+                <i class="fa-solid fa-magnifying-glass"></i>
 
-                <option value="LOW">
-                    LOW
-                </option>
+                <label class="sr-only" for="searchPortfolio">
+                    Search portfolios
+                </label>
 
-                <option value="MEDIUM">
-                    MEDIUM
-                </option>
-
-                <option value="HIGH">
-                    HIGH
-                </option>
-
-            </select>
-
-            <div class="modal-buttons">
-
-                <button type="submit">
-                    Save
-                </button>
-
-                <button
-                        type="button"
-                        onclick="closeModal()">
-
-                    Cancel
-
-                </button>
+                <input type="search"
+                       id="searchPortfolio"
+                       placeholder="Search investor, ID or portfolio"
+                       autocomplete="off">
 
             </div>
 
-        </form>
+        </div>
 
-    </div>
+        <div th:if="${#lists.isEmpty(portfolios)}"
+             class="empty-state">
 
-</div>
+            <div class="empty-icon">
+                <i class="fa-solid fa-folder-open"></i>
+            </div>
 
+            <h2>No portfolios yet</h2>
 
-<script src="../static/js/portfolio.js"></script>
+            <p th:text="${user.role.name() == 'ADVISOR'
+                         ? 'There are no portfolios available to review.'
+                         : 'Create your first portfolio to begin tracking investments.'}">
+                There are no portfolios available.
+            </p>
+
+            <a th:if="${user.role.name() != 'ADVISOR'}"
+               th:href="@{/portfolio/add}"
+               class="primary-button">
+
+                <i class="fa-solid fa-plus"></i>
+                Create Portfolio
+
+            </a>
+
+        </div>
+
+        <div class="investor-groups"
+             th:unless="${#lists.isEmpty(portfolios)}">
+
+            <section class="investor-group"
+                     th:each="investorEntry : ${portfoliosByInvestor}">
+
+                <header class="investor-header">
+
+                    <div class="investor-identity">
+                        <div class="investor-avatar">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+
+                        <div>
+                            <div class="investor-name-line">
+                                <h3 th:text="${investorEntry.value[0].investor != null
+                                             ? investorEntry.value[0].investor.username
+                                             : 'Unassigned Investor'}">
+                                    Investor
+                                </h3>
+
+                                <span class="investor-id">
+                                    ID
+                                    <strong th:text="${investorEntry.key != null
+                                                     ? investorEntry.key
+                                                     : 'N/A'}">
+                                        0
+                                    </strong>
+                                </span>
+                            </div>
+
+                            <p>
+                                <span th:text="${#lists.size(investorEntry.value)}">0</span>
+                                <span th:text="${#lists.size(investorEntry.value) == 1
+                                               ? 'portfolio'
+                                               : 'portfolios'}">
+                                    portfolios
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="group-value-label">
+                        <i class="fa-solid fa-briefcase"></i>
+                        Portfolio group
+                    </div>
+
+                </header>
+
+                <div class="portfolio-grid">
+
+                    <article class="portfolio-card"
+                             th:each="portfolio : ${investorEntry.value}">
+
+                        <div class="portfolio-card-header">
+
+                            <div class="portfolio-title">
+                                <div class="portfolio-icon">
+                                    <i class="fa-solid fa-wallet"></i>
+                                </div>
+
+                                <div>
+                                    <p>Investment portfolio</p>
+                                    <h4 th:text="${portfolio.portfolioName}">
+                                        Portfolio Name
+                                    </h4>
+                                </div>
+                            </div>
+
+                            <span class="portfolio-id">
+                                #<span th:text="${portfolio.portfolioId}">0</span>
+                            </span>
+
+                        </div>
+
+                        <div class="portfolio-metrics">
+
+                            <div class="metric">
+                                <span>Current value</span>
+
+                                <strong th:text="${portfolio.totalValue != null
+                                    ? '₹' + #numbers.formatDecimal(
+                                        portfolio.totalValue,
+                                        1,
+                                        'COMMA',
+                                        2,
+                                        'POINT'
+                                    )
+                                    : '₹0.00'}">
+                                    ₹0.00
+                                </strong>
+                            </div>
+
+                            <div class="metric metric-risk">
+                                <span>Risk profile</span>
+
+                                <span th:if="${portfolio.riskLevel != null}"
+                                      class="risk-badge"
+                                      th:classappend="${#strings.toLowerCase(
+                                          portfolio.riskLevel.name()
+                                      )}">
+
+                                    <i class="fa-solid fa-circle"></i>
+
+                                    <span th:text="${portfolio.riskLevel}">
+                                        Risk
+                                    </span>
+
+                                </span>
+
+                                <span th:unless="${portfolio.riskLevel != null}"
+                                      class="risk-badge risk-unset">
+                                    Not set
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="card-divider"></div>
+
+                        <div class="card-actions"
+                             th:if="${user.role.name() != 'ADVISOR'}">
+
+                            <a th:href="@{/portfolio/edit/{id}(
+                                   id=${portfolio.portfolioId}
+                               )}"
+                               class="secondary-button">
+
+                                <i class="fa-solid fa-pen"></i>
+                                Edit
+
+                            </a>
+
+                            <form th:action="@{/portfolio/delete/{id}(
+                                      id=${portfolio.portfolioId}
+                                  )}"
+                                  method="post"
+                                  class="delete-form"
+                                  onsubmit="return confirm(
+                                      'Are you sure you want to delete this portfolio?'
+                                  );">
+
+                                <button type="submit" class="danger-button">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                        <div class="advisor-view"
+                             th:if="${user.role.name() == 'ADVISOR'}">
+
+                            <i class="fa-solid fa-eye"></i>
+                            View only access
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script th:src="@{/js/portfolio.js}"></script>
 
 </body>
 </html>
