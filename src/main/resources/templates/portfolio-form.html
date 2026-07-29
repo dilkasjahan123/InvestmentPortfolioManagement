@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${portfolio.portfolioId == null
+                     ? 'Create Portfolio'
+                     : 'Update Portfolio'}">
+        Portfolio Form
+    </title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/portfolio.css}">
+</head>
+
+<body>
+
+<div class="background-glow background-glow-left"></div>
+<div class="background-glow background-glow-right"></div>
+
+<main class="form-shell">
+
+    <a th:href="@{/portfolios}" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to portfolios
+    </a>
+
+    <section class="portfolio-form-card">
+
+        <div class="form-card-header">
+            <div class="form-header-icon">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+
+            <div>
+                <p class="eyebrow"
+                   th:text="${portfolio.portfolioId == null
+                            ? 'New investment portfolio'
+                            : 'Portfolio settings'}">
+                    Portfolio
+                </p>
+
+                <h1 th:text="${portfolio.portfolioId == null
+                             ? 'Create Portfolio'
+                             : 'Update Portfolio'}">
+                    Portfolio Form
+                </h1>
+
+                <p>
+                    Add the essential information used to manage this portfolio.
+                </p>
+            </div>
+        </div>
+
+        <div th:if="${error}"
+             class="alert alert-error"
+             role="alert">
+
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span th:text="${error}">Something went wrong.</span>
+
+        </div>
+
+        <form th:action="@{${formAction}}"
+              th:object="${portfolio}"
+              method="post"
+              class="portfolio-form">
+
+            <input type="hidden" th:field="*{portfolioId}">
+
+            <div class="form-section">
+
+                <div class="form-section-heading">
+                    <span>01</span>
+
+                    <div>
+                        <h2>Portfolio details</h2>
+                        <p>Choose a clear name for this investment portfolio.</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="portfolioName">
+                        Portfolio name
+                        <span class="required">*</span>
+                    </label>
+
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-wallet"></i>
+
+                        <input type="text"
+                               id="portfolioName"
+                               th:field="*{portfolioName}"
+                               placeholder="Example: Long-Term Growth"
+                               maxlength="100"
+                               required>
+                    </div>
+
+                    <small>Use a name that makes the investment goal easy to identify.</small>
+                </div>
+
+            </div>
+
+            <div class="form-section">
+
+                <div class="form-section-heading">
+                    <span>02</span>
+
+                    <div>
+                        <h2>Ownership and risk</h2>
+                        <p>Assign the investor and select an appropriate risk profile.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group"
+                         th:if="${user.role.name() == 'ADMIN'}">
+
+                        <label for="investor">
+                            Investor
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="select-wrapper">
+                            <i class="fa-solid fa-user-tie"></i>
+
+                            <select id="investor"
+                                    th:field="*{investor.userId}"
+                                    required>
+
+                                <option value="">Select an investor</option>
+
+                                <option th:each="investorOption : ${investors}"
+                                        th:value="${investorOption.userId}"
+                                        th:text="${investorOption.username}">
+                                    Investor
+                                </option>
+
+                            </select>
+
+                            <i class="fa-solid fa-chevron-down select-arrow"></i>
+                        </div>
+
+                    </div>
+
+                    <input th:if="${user.role.name() == 'INVESTOR'}"
+                           type="hidden"
+                           th:field="*{investor.userId}">
+
+                    <div class="form-group"
+                         th:classappend="${user.role.name() == 'INVESTOR'
+                                         ? ' form-group-full'
+                                         : ''}">
+
+                        <label for="riskLevel">
+                            Risk level
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="select-wrapper">
+                            <i class="fa-solid fa-gauge-high"></i>
+
+                            <select id="riskLevel"
+                                    th:field="*{riskLevel}"
+                                    required>
+
+                                <option value="">Select a risk level</option>
+
+                                <option th:each="risk : ${riskLevels}"
+                                        th:value="${risk}"
+                                        th:text="${risk}">
+                                    Risk
+                                </option>
+
+                            </select>
+
+                            <i class="fa-solid fa-chevron-down select-arrow"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="form-footer">
+                <p>
+                    <i class="fa-solid fa-lock"></i>
+                    Your portfolio information is securely stored.
+                </p>
+
+                <div class="form-actions">
+                    <a th:href="@{/portfolios}" class="cancel-button">
+                        Cancel
+                    </a>
+
+                    <button type="submit" class="primary-button">
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        <span th:text="${portfolio.portfolioId == null
+                                       ? 'Create Portfolio'
+                                       : 'Save Changes'}">
+                            Save
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+</html>

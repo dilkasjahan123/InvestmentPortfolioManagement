@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${asset.assetId == null ? 'Add Asset' : 'Update Asset'}">
+        Asset Form
+    </title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet"
+          th:href="@{/css/asset.css}">
+</head>
+
+<body>
+
+<div class="page-glow glow-left"></div>
+<div class="page-glow glow-right"></div>
+
+<main class="asset-form-page">
+
+    <a th:href="@{/assets}" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to assets
+    </a>
+
+    <section class="form-layout">
+
+        <div class="form-card">
+
+            <header class="form-header">
+                <div class="form-header-icon">
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+
+                <div>
+                    <p class="eyebrow"
+                       th:text="${asset.assetId == null
+                                ? 'New portfolio holding'
+                                : 'Asset settings'}">
+                        Asset details
+                    </p>
+
+                    <h1 th:text="${asset.assetId == null
+                                 ? 'Add Asset'
+                                 : 'Update Asset'}">
+                        Asset Form
+                    </h1>
+
+                    <p>Enter the holding and pricing information below.</p>
+                </div>
+            </header>
+
+            <div th:if="${error}"
+                 class="alert alert-error form-alert"
+                 role="alert">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span th:text="${error}">Something went wrong.</span>
+            </div>
+
+            <form th:action="@{${formAction}}"
+                  th:object="${asset}"
+                  method="post"
+                  class="asset-form">
+
+                <input type="hidden" th:field="*{assetId}">
+
+                <section class="form-section">
+                    <div class="section-title">
+                        <span>01</span>
+                        <div>
+                            <h2>Basic information</h2>
+                            <p>Identify the asset and its portfolio.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="assetName">
+                            Asset name
+                            <span>*</span>
+                        </label>
+
+                        <div class="input-control">
+                            <i class="fa-solid fa-cube"></i>
+
+                            <input type="text"
+                                   id="assetName"
+                                   th:field="*{assetName}"
+                                   placeholder="Example: Reliance Industries"
+                                   maxlength="100"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="two-column-fields">
+                        <div class="form-group">
+                            <label for="portfolioId">
+                                Portfolio
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-control select-control">
+                                <i class="fa-solid fa-wallet"></i>
+
+                                <select id="portfolioId"
+                                        th:field="*{portfolio.portfolioId}"
+                                        required>
+                                    <option value="">Select a portfolio</option>
+
+                                    <option th:each="portfolioOption : ${portfolios}"
+                                            th:value="${portfolioOption.portfolioId}"
+                                            th:text="${portfolioOption.portfolioName
+                                                     + ' — '
+                                                     + (portfolioOption.investor != null
+                                                        ? portfolioOption.investor.username
+                                                        : 'Unassigned')}">
+                                        Portfolio
+                                    </option>
+                                </select>
+
+                                <i class="fa-solid fa-chevron-down select-arrow"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="assetType">
+                                Asset type
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-control select-control">
+                                <i class="fa-solid fa-shapes"></i>
+
+                                <select id="assetType"
+                                        th:field="*{assetType}"
+                                        required>
+                                    <option value="">Select an asset type</option>
+
+                                    <option th:each="type : ${assetTypes}"
+                                            th:value="${type}"
+                                            th:text="${type.displayName}">
+                                        Asset Type
+                                    </option>
+                                </select>
+
+                                <i class="fa-solid fa-chevron-down select-arrow"></i>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <div class="section-title">
+                        <span>02</span>
+                        <div>
+                            <h2>Holding and pricing</h2>
+                            <p>Provide quantity and per-unit prices.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">
+                            Quantity
+                            <span>*</span>
+                        </label>
+
+                        <div class="input-control">
+                            <i class="fa-solid fa-layer-group"></i>
+
+                            <input type="number"
+                                   id="quantity"
+                                   th:field="*{quantity}"
+                                   placeholder="Enter quantity"
+                                   min="1"
+                                   step="1"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="two-column-fields">
+                        <div class="form-group">
+                            <label for="purchasePrice">
+                                Purchase price
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-control">
+                                <i class="fa-solid fa-indian-rupee-sign"></i>
+
+                                <input type="number"
+                                       id="purchasePrice"
+                                       th:field="*{purchasePrice}"
+                                       placeholder="0.00"
+                                       min="0.01"
+                                       step="0.01"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="currentPrice">
+                                Current price
+                                <span>*</span>
+                            </label>
+
+                            <div class="input-control">
+                                <i class="fa-solid fa-indian-rupee-sign"></i>
+
+                                <input type="number"
+                                       id="currentPrice"
+                                       th:field="*{currentPrice}"
+                                       placeholder="0.00"
+                                       min="0.01"
+                                       step="0.01"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="form-footer">
+                    <p>
+                        <i class="fa-solid fa-shield-halved"></i>
+                        Portfolio totals update automatically after saving.
+                    </p>
+
+                    <div>
+                        <a th:href="@{/assets}" class="cancel-button">
+                            Cancel
+                        </a>
+
+                        <button type="submit" class="primary-button">
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            <span th:text="${asset.assetId == null
+                                           ? 'Create Asset'
+                                           : 'Save Changes'}">
+                                Save Asset
+                            </span>
+                        </button>
+                    </div>
+                </footer>
+
+            </form>
+
+        </div>
+
+        <aside class="value-preview">
+            <div class="preview-heading">
+                <span>Live preview</span>
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+
+            <h2>Position overview</h2>
+            <p>Values update as you complete the form.</p>
+
+            <div class="preview-main-value">
+                <span>Current value</span>
+                <strong id="previewCurrentValue">₹0.00</strong>
+            </div>
+
+            <div class="preview-row">
+                <span>Invested value</span>
+                <strong id="previewInvestedValue">₹0.00</strong>
+            </div>
+
+            <div class="preview-row">
+                <span>Profit / loss</span>
+                <strong id="previewProfitLoss">₹0.00</strong>
+            </div>
+
+            <div class="preview-row">
+                <span>Return</span>
+                <strong id="previewReturn">0.00%</strong>
+            </div>
+
+            <div class="preview-note">
+                <i class="fa-solid fa-circle-info"></i>
+                Profit and loss are calculated from current and purchase prices.
+            </div>
+        </aside>
+
+    </section>
+
+</main>
+
+<script
+        th:src="@{/js/asset.js}"></script>
+
+</body>
+</html>
