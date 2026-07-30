@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <link rel="stylesheet" th:href="@{/css/Transaction.css}">
+</head>
+<body>
+
+<header>
+    <h2>Transaction History</h2>
+    <div>Welcome, <span th:text="${user.username}">User</span></div>
+</header>
+
+<section class="table-section">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Asset ID</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total Amount</th>
+            <th>Date and Time</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(transactions)}">
+            <td colspan="8">No transactions found.</td>
+        </tr>
+        <tr th:each="transaction : ${transactions}">
+            <td th:text="${transaction.transactionId}"></td>
+            <td th:text="${transaction.assetId}"></td>
+            <td th:text="${transaction.transactionType}"></td>
+            <td th:text="${transaction.quantity}"></td>
+            <td th:text="${transaction.price}"></td>
+            <td th:text="${transaction.totalAmount}"></td>
+            <td th:text="${transaction.transactionDate}"></td>
+            <td th:text="${transaction.status}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <a th:href="@{/transactions}">
+        <button type="button">Back to Transactions</button>
+    </a>
+</section>
+</body>
+</html>
