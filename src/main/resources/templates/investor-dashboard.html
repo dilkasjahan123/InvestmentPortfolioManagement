@@ -74,7 +74,7 @@
                 <span>Transactions</span>
             </a>
 
-            <a th:href="@{/investor/analytics}">
+            <a th:href="@{/performance-report}">
                 <span class="nav-icon">
                     <i class="fa-solid fa-chart-column"></i>
                 </span>
@@ -197,7 +197,7 @@
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
 
-                        <a th:href="@{/investor/analytics}"
+                        <a th:href="@{/performance-report}"
                            class="ghost-button">
                             Open Analytics
                         </a>
@@ -677,7 +677,7 @@
                                 View Assets
                             </a>
 
-                            <a th:href="@{/investor/analytics(
+                            <a th:href="@{/performance-report(
                                    portfolioId=${portfolio.portfolioId}
                                )}"
                                class="analytics-button">
