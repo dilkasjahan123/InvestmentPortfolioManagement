@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions</title>
+    <link rel="stylesheet" th:href="@{/css/Transaction.css}">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <h2>Investment Portfolio Management System</h2>
+    </div>
+    <div class="user">
+        Welcome, <span th:text="${user.username}">User</span>
+    </div>
+</header>
+
+<nav>
+    <ul>
+        <li><a th:href="${dashboardUrl}">Dashboard</a></li>
+        <li><a th:href="@{/assets}">Assets</a></li>
+        <li th:if="${canTrade}">
+            <a th:href="@{/transactions/buy}">Buy Asset</a>
+        </li>
+        <li th:if="${canTrade}">
+            <a th:href="@{/transactions/sell}">Sell Asset</a>
+        </li>
+        <li><a th:href="@{/transactions/history}">Transaction History</a></li>
+    </ul>
+</nav>
+
+<p class="success" th:if="${success}" th:text="${success}"></p>
+<p class="failed" th:if="${error}" th:text="${error}"></p>
+
+<section class="cards" th:if="${canTrade}">
+    <div class="card">
+        <h3>Buy Asset</h3>
+        <p>Purchase more units of an asset in your portfolio.</p>
+        <button type="button"
+                th:onclick="|window.location.href='@{/transactions/buy}'|">
+            Buy Now
+        </button>
+    </div>
+
+    <div class="card">
+        <h3>Sell Asset</h3>
+        <p>Sell available units from one of your holdings.</p>
+        <button type="button"
+                th:onclick="|window.location.href='@{/transactions/sell}'|">
+            Sell Now
+        </button>
+    </div>
+
+    <div class="card">
+        <h3>Transaction History</h3>
+        <p>View all previous buy and sell transactions.</p>
+        <button type="button"
+                th:onclick="|window.location.href='@{/transactions/history}'|">
+            View History
+        </button>
+    </div>
+</section>
+
+<section class="summary">
+    <div class="summary-card">
+        <h3>Total Buy</h3>
+        <h2 th:text="${#numbers.formatDecimal(totalBuy, 1, 2)}">0.00</h2>
+    </div>
+    <div class="summary-card">
+        <h3>Total Sell</h3>
+        <h2 th:text="${#numbers.formatDecimal(totalSell, 1, 2)}">0.00</h2>
+    </div>
+    <div class="summary-card">
+        <h3>Success Rate</h3>
+        <h2>
+            <span th:text="${#numbers.formatDecimal(successRate, 1, 2)}">0.00</span>%
+        </h2>
+    </div>
+</section>
+
+<section class="table-section">
+    <h2>Recent Transactions</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Transaction ID</th>
+            <th>Asset</th>
+            <th>Type</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total Amount</th>
+            <th>Date and Time</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(recentTransactions)}">
+            <td colspan="8">No transactions found.</td>
+        </tr>
+        <tr th:each="transaction : ${recentTransactions}">
+            <td th:text="${transaction.transactionId}"></td>
+            <td th:text="${transaction.assetId}"></td>
+            <td th:text="${transaction.transactionType}"></td>
+            <td th:text="${transaction.quantity}"></td>
+            <td th:text="${transaction.price}"></td>
+            <td th:text="${transaction.totalAmount}"></td>
+            <td th:text="${transaction.transactionDate}"></td>
+            <td th:text="${transaction.status}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<footer>
+    <p>&copy; 2026 Investment Portfolio Management System | Transaction Module</p>
+</footer>
+</body>
+</html>
