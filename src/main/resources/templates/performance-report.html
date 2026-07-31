@@ -1,75 +1,51 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Performance Analytics</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/performance-report.css}">
 </head>
-
 <body>
 
-<div class="background-glow glow-left"></div>
-<div class="background-glow glow-right"></div>
+<header>
+    <div>
+        <h2>Investment Portfolio Management System</h2>
+        <p>Performance Analytics</p>
+    </div>
+    <div>
+        Welcome, <strong th:text="${user.username}">User</strong>
+        (<span th:text="${user.role}">Role</span>)
+    </div>
+</header>
 
-<main class="report-shell">
-
-    <header class="page-header">
-        <div class="brand">
-            <div class="brand-icon">
-                <i class="fa-solid fa-chart-line"></i>
-            </div>
-
-            <div>
-                <p class="eyebrow">Investment intelligence</p>
-                <h1>Performance Analytics</h1>
-                <p>Measure portfolio returns, valuation, allocation and risk.</p>
-            </div>
-        </div>
-
-        <div class="header-actions">
-            <div class="user-chip">
-                <i class="fa-solid fa-user"></i>
-                <div>
-                    <strong th:text="${user.username}">Username</strong>
-                    <span th:text="${user.role}">Role</span>
-                </div>
-            </div>
-
-            <a class="secondary-button"
-               th:href="${user.role.name() == 'ADMIN'
-                    ? '/admin'
-                    : (user.role.name() == 'ADVISOR'
-                        ? '/advisor'
-                        : '/investor')}">
-                <i class="fa-solid fa-arrow-left"></i>
+<nav>
+    <ul>
+        <li>
+            <a th:href="${user.role.name() == 'ADMIN'
+                ? '/admin'
+                : (user.role.name() == 'ADVISOR'
+                    ? '/advisor'
+                    : '/investor')}">
                 Dashboard
             </a>
-        </div>
-    </header>
+        </li>
+        <li><a th:href="@{/portfolios}">Portfolios</a></li>
+        <li><a th:href="@{/performance-report}">Analytics</a></li>
+    </ul>
+</nav>
 
-    <div th:if="${success}" class="alert success" role="status">
-        <i class="fa-solid fa-circle-check"></i>
-        <span th:text="${success}">Report generated.</span>
-    </div>
+<main>
+    <p th:if="${success}" class="success" th:text="${success}">
+        Report generated.
+    </p>
+    <p th:if="${error}" class="failed" th:text="${error}">
+        Unable to load report.
+    </p>
 
-    <div th:if="${error}" class="alert error" role="alert">
-        <i class="fa-solid fa-circle-exclamation"></i>
-        <span th:text="${error}">Unable to load report.</span>
-    </div>
-
-    <section class="portfolio-selector">
+    <section class="selector-section">
         <div>
-            <p class="eyebrow">Report scope</p>
-            <h2>Select a portfolio</h2>
+            <h2>Select a Portfolio</h2>
             <p>Analytics include active assets only.</p>
         </div>
 
@@ -79,7 +55,7 @@
                    name="investorId"
                    th:value="${investorId}">
 
-            <label class="sr-only" for="portfolioId">Portfolio</label>
+            <label for="portfolioId">Portfolio</label>
             <select id="portfolioId"
                     name="portfolioId"
                     onchange="this.form.submit()"
@@ -93,174 +69,121 @@
                             and selectedPortfolio.portfolioId
                             == portfolio.portfolioId}"
                         th:text="${(portfolio.investor != null
-                            ? portfolio.investor.username + ' · '
+                            ? portfolio.investor.username + ' - '
                             : '') + portfolio.portfolioName}">
-                    Investor · Portfolio
+                    Investor - Portfolio
                 </option>
             </select>
         </form>
     </section>
 
     <section th:if="${selectedPortfolio == null}" class="empty-state">
-        <i class="fa-solid fa-chart-column"></i>
-        <h2>No portfolio data to analyze</h2>
-        <p>Create or assign a portfolio before generating performance reports.</p>
-        <a class="primary-button" th:href="@{/portfolios}">
-            View portfolios
-        </a>
+        <h2>No Portfolio Data</h2>
+        <p>Create or assign a portfolio before generating reports.</p>
+        <a class="button" th:href="@{/portfolios}">View Portfolios</a>
     </section>
 
     <th:block th:if="${selectedPortfolio != null}">
-
-        <section class="report-heading">
+        <section class="report-title">
             <div>
-                <p class="eyebrow"
-                   th:text="${selectedPortfolio.investor != null
-                       ? selectedPortfolio.investor.username
-                       : 'Unassigned investor'}">
-                    Investor
-                </p>
                 <h2 th:text="${selectedPortfolio.portfolioName}">
-                    Portfolio name
+                    Portfolio Name
                 </h2>
-                <span class="risk-badge"
-                      th:classappend="${' risk-' + #strings.toLowerCase(
-                          selectedPortfolio.riskLevel.name())}"
-                      th:text="${selectedPortfolio.riskLevel + ' RISK'}">
-                    MEDIUM RISK
-                </span>
+                <p>
+                    Investor:
+                    <strong th:text="${selectedPortfolio.investor != null
+                        ? selectedPortfolio.investor.username
+                        : 'Unassigned'}">
+                        Investor
+                    </strong>
+                </p>
+                <p>
+                    Risk Level:
+                    <strong th:text="${selectedPortfolio.riskLevel}">
+                        MEDIUM
+                    </strong>
+                </p>
             </div>
 
             <form method="post"
                   th:action="@{/performance-report/generate/{id}(
                       id=${selectedPortfolio.portfolioId})}">
-                <button class="primary-button" type="submit">
-                    <i class="fa-solid fa-file-circle-plus"></i>
-                    Generate snapshot
-                </button>
+                <button type="submit">Generate Snapshot</button>
             </form>
         </section>
 
-        <section class="metrics-grid" aria-label="Portfolio performance metrics">
-            <article class="metric-card">
-                <span class="metric-icon invested">
-                    <i class="fa-solid fa-coins"></i>
-                </span>
-                <div>
-                    <p>Invested value</p>
-                    <h3 th:text="${'₹' + #numbers.formatDecimal(
-                        analytics.investedValue, 1, 'COMMA', 2, 'POINT')}">
-                        ₹0.00
-                    </h3>
-                    <small>Original cost basis</small>
-                </div>
-            </article>
-
-            <article class="metric-card">
-                <span class="metric-icon current">
-                    <i class="fa-solid fa-wallet"></i>
-                </span>
-                <div>
-                    <p>Current value</p>
-                    <h3 th:text="${'₹' + #numbers.formatDecimal(
-                        analytics.currentValue, 1, 'COMMA', 2, 'POINT')}">
-                        ₹0.00
-                    </h3>
-                    <small>Latest asset prices</small>
-                </div>
-            </article>
-
-            <article class="metric-card">
-                <span class="metric-icon"
-                      th:classappend="${analytics.profitLoss.signum() >= 0
-                          ? ' gain'
-                          : ' loss'}">
-                    <i class="fa-solid fa-arrow-trend-up"></i>
-                </span>
-                <div>
-                    <p>Profit / loss</p>
-                    <h3 th:class="${analytics.profitLoss.signum() >= 0
-                            ? 'positive'
-                            : 'negative'}"
-                        th:text="${'₹' + #numbers.formatDecimal(
-                            analytics.profitLoss, 1, 'COMMA', 2, 'POINT')}">
-                        ₹0.00
-                    </h3>
-                    <small>Unrealized result</small>
-                </div>
-            </article>
-
-            <article class="metric-card">
-                <span class="metric-icon return">
-                    <i class="fa-solid fa-percent"></i>
-                </span>
-                <div>
-                    <p>Portfolio return</p>
-                    <h3 th:class="${analytics.returnPercentage.signum() >= 0
-                            ? 'positive'
-                            : 'negative'}"
-                        th:text="${#numbers.formatDecimal(
-                            analytics.returnPercentage, 1, 2) + '%'}">
-                        0.00%
-                    </h3>
-                    <small th:text="${'Risk score ' + analytics.riskScore
-                        + ' / 10'}">
-                        Risk score 0 / 10
-                    </small>
-                </div>
-            </article>
-        </section>
-
-        <section class="charts-grid">
-            <article class="panel chart-panel">
-                <div class="panel-heading">
-                    <div>
-                        <p class="eyebrow">Diversification</p>
-                        <h2>Asset allocation</h2>
-                    </div>
-                </div>
-                <div class="chart-wrap">
-                    <canvas id="allocationChart"></canvas>
-                    <p id="allocationEmpty" class="chart-empty">
-                        No active asset value to chart.
-                    </p>
-                </div>
-            </article>
-
-            <article class="panel chart-panel">
-                <div class="panel-heading">
-                    <div>
-                        <p class="eyebrow">Saved snapshots</p>
-                        <h2>Return history</h2>
-                    </div>
-                </div>
-                <div class="chart-wrap">
-                    <canvas id="historyChart"></canvas>
-                    <p id="historyEmpty" class="chart-empty">
-                        Generate a snapshot to begin the trend.
-                    </p>
-                </div>
-            </article>
-        </section>
-
-        <section class="panel holdings-panel">
-            <div class="panel-heading">
-                <div>
-                    <p class="eyebrow">Portfolio composition</p>
-                    <h2>Active holdings</h2>
-                </div>
-                <span class="count-badge"
-                      th:text="${analytics.assets.size() + ' assets'}">
-                    0 assets
-                </span>
+        <section class="summary">
+            <div class="summary-card">
+                <h3>Invested Value</h3>
+                <h2 th:text="${'₹' + #numbers.formatDecimal(
+                    analytics.investedValue, 1, 'COMMA', 2, 'POINT')}">
+                    ₹0.00
+                </h2>
+                <p>Original cost</p>
             </div>
 
-            <div th:if="${analytics.assets.isEmpty()}" class="table-empty">
+            <div class="summary-card">
+                <h3>Current Value</h3>
+                <h2 th:text="${'₹' + #numbers.formatDecimal(
+                    analytics.currentValue, 1, 'COMMA', 2, 'POINT')}">
+                    ₹0.00
+                </h2>
+                <p>Latest value</p>
+            </div>
+
+            <div class="summary-card">
+                <h3>Profit / Loss</h3>
+                <h2 th:class="${analytics.profitLoss.signum() >= 0
+                        ? 'positive'
+                        : 'negative'}"
+                    th:text="${'₹' + #numbers.formatDecimal(
+                        analytics.profitLoss, 1, 'COMMA', 2, 'POINT')}">
+                    ₹0.00
+                </h2>
+                <p>Unrealized result</p>
+            </div>
+
+            <div class="summary-card">
+                <h3>Portfolio Return</h3>
+                <h2 th:class="${analytics.returnPercentage.signum() >= 0
+                        ? 'positive'
+                        : 'negative'}"
+                    th:text="${#numbers.formatDecimal(
+                        analytics.returnPercentage, 1, 2) + '%'}">
+                    0.00%
+                </h2>
+                <p th:text="${'Risk score: ' + analytics.riskScore + ' / 10'}">
+                    Risk score: 0 / 10
+                </p>
+            </div>
+        </section>
+
+        <section class="cards">
+            <div class="card chart-card">
+                <h3>Asset Allocation</h3>
+                <canvas id="allocationChart"></canvas>
+                <p id="allocationEmpty" class="chart-empty">
+                    No active asset value to display.
+                </p>
+            </div>
+
+            <div class="card chart-card">
+                <h3>Return History</h3>
+                <canvas id="historyChart"></canvas>
+                <p id="historyEmpty" class="chart-empty">
+                    Generate a snapshot to view return history.
+                </p>
+            </div>
+        </section>
+
+        <section class="table-section">
+            <h2>Active Holdings</h2>
+
+            <p th:if="${analytics.assets.isEmpty()}" class="empty-message">
                 No active assets are assigned to this portfolio.
-            </div>
+            </p>
 
-            <div th:unless="${analytics.assets.isEmpty()}"
-                 class="table-scroll">
+            <div th:unless="${analytics.assets.isEmpty()}" class="table-wrapper">
                 <table>
                     <thead>
                     <tr>
@@ -269,14 +192,12 @@
                         <th>Quantity</th>
                         <th>Invested</th>
                         <th>Current</th>
-                        <th>Profit / loss</th>
+                        <th>Profit / Loss</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="asset : ${analytics.assets}">
-                        <td>
-                            <strong th:text="${asset.assetName}">Asset</strong>
-                        </td>
+                        <td th:text="${asset.assetName}">Asset</td>
                         <td th:text="${asset.assetType.displayName}">Stock</td>
                         <td th:text="${asset.quantity}">0</td>
                         <td th:text="${'₹' + #numbers.formatDecimal(
@@ -300,50 +221,42 @@
             </div>
         </section>
 
-        <section class="panel history-panel">
-            <div class="panel-heading">
-                <div>
-                    <p class="eyebrow">Audit trail</p>
-                    <h2>Generated reports</h2>
-                </div>
-            </div>
+        <section class="table-section">
+            <h2>Generated Reports</h2>
 
-            <div th:if="${reports.isEmpty()}" class="table-empty">
-                No snapshots have been generated for this portfolio.
-            </div>
+            <p th:if="${reports.isEmpty()}" class="empty-message">
+                No reports have been generated for this portfolio.
+            </p>
 
-            <div th:unless="${reports.isEmpty()}" class="report-list">
-                <article th:each="report : ${reports}" class="report-row">
-                    <span class="report-icon">
-                        <i class="fa-solid fa-file-lines"></i>
-                    </span>
-                    <div>
-                        <strong th:text="${'Report #' + report.reportId}">
-                            Report #1
-                        </strong>
-                        <span th:text="${#temporals.format(
+            <div th:unless="${reports.isEmpty()}" class="table-wrapper">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Report ID</th>
+                        <th>Date</th>
+                        <th>Return</th>
+                        <th>Risk Score</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="report : ${reports}">
+                        <td th:text="${report.reportId}">1</td>
+                        <td th:text="${#temporals.format(
                             report.reportDate, 'dd MMMM yyyy')}">
                             01 January 2026
-                        </span>
-                    </div>
-                    <dl>
-                        <div>
-                            <dt>Return</dt>
-                            <dd th:class="${report.returnPercentage.signum() >= 0
-                                    ? 'positive'
-                                    : 'negative'}"
-                                th:text="${report.returnPercentage + '%'}">
-                                0%
-                            </dd>
-                        </div>
-                        <div>
-                            <dt>Risk score</dt>
-                            <dd th:text="${report.riskScore + ' / 10'}">
-                                0 / 10
-                            </dd>
-                        </div>
-                    </dl>
-                </article>
+                        </td>
+                        <td th:class="${report.returnPercentage.signum() >= 0
+                                ? 'positive'
+                                : 'negative'}"
+                            th:text="${report.returnPercentage + '%'}">
+                            0%
+                        </td>
+                        <td th:text="${report.riskScore + ' / 10'}">
+                            0 / 10
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
 
@@ -356,11 +269,13 @@
             };
         </script>
     </th:block>
-
 </main>
+
+<footer>
+    <p>Investment Portfolio Management System</p>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{/js/performance-report.js}"></script>
-
 </body>
 </html>
