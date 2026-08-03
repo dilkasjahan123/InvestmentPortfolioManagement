@@ -34,6 +34,7 @@
             <option value="">Select an asset</option>
             <option th:each="asset : ${assets}"
                     th:value="${asset.assetId}"
+                    th:data-price="${asset.currentPrice}"
                     th:text="|${asset.assetName} (ID: ${asset.assetId}, available: ${asset.quantity})|">
             </option>
         </select>
@@ -52,7 +53,8 @@
                th:field="*{price}"
                min="0.01"
                step="0.01"
-               placeholder="Enter price"
+               placeholder="Select an asset to view its price"
+               readonly
                required>
 
         <button type="submit">Buy Asset</button>

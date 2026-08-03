@@ -1,3 +1,21 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const assetSelect = document.getElementById("assetId");
+    const priceInput = document.getElementById("price");
+
+    if (!assetSelect || !priceInput) {
+        return;
+    }
+
+    const updatePrice = () => {
+        const selectedOption =
+            assetSelect.options[assetSelect.selectedIndex];
+        priceInput.value = selectedOption?.dataset.price || "";
+    };
+
+    assetSelect.addEventListener("change", updatePrice);
+    updatePrice();
+});
+
 function validateTransactionForm() {
     const assetId = document.getElementById("assetId").value;
     const quantity = Number(document.getElementById("quantity").value);
