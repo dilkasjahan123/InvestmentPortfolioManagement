@@ -33,8 +33,13 @@ public class TransactionService {
 
     @Transactional
     public void buyAsset(Transaction transaction, User loggedUser) {
+        if (transaction == null || transaction.getAssetId() == null) {
+            throw new IllegalArgumentException("Please select an asset.");
+        }
+        Asset asset = findAccessibleAsset(transaction.getAssetId(),
+                loggedUser);
+        transaction.setPrice(asset.getCurrentPrice());
         validateTransaction(transaction);
-        Asset asset = findAccessibleAsset(transaction.getAssetId(), loggedUser);
 
         int existingQuantity = safeQuantity(asset);
         int purchasedQuantity = transaction.getQuantity();
@@ -52,7 +57,6 @@ public class TransactionService {
 
         asset.setQuantity(updatedQuantity);
         asset.setPurchasePrice(averagePurchasePrice);
-        asset.setCurrentPrice(transaction.getPrice());
         asset.setActive(true);
         assetRepository.save(asset);
 
@@ -63,8 +67,12 @@ public class TransactionService {
 
     @Transactional
     public void sellAsset(Transaction transaction, User loggedUser) {
-        validateTransaction(transaction);
+        if (transaction == null || transaction.getAssetId() == null) {
+            throw new IllegalArgumentException("Please select an asset.");
+        }
         Asset asset = findAccessibleAsset(transaction.getAssetId(), loggedUser);
+        transaction.setPrice(asset.getCurrentPrice());
+        validateTransaction(transaction);
 
         int existingQuantity = safeQuantity(asset);
         if (transaction.getQuantity() > existingQuantity) {
@@ -74,7 +82,6 @@ public class TransactionService {
 
         int remainingQuantity = existingQuantity - transaction.getQuantity();
         asset.setQuantity(remainingQuantity);
-        asset.setCurrentPrice(transaction.getPrice());
         asset.setActive(remainingQuantity > 0);
         assetRepository.save(asset);
 

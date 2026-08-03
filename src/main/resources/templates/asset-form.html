@@ -167,44 +167,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="quantity">
-                            Quantity
-                            <span>*</span>
-                        </label>
 
-                        <div class="input-control">
-                            <i class="fa-solid fa-layer-group"></i>
-
-                            <input type="number"
-                                   id="quantity"
-                                   th:field="*{quantity}"
-                                   placeholder="Enter quantity"
-                                   min="1"
-                                   step="1"
-                                   required>
-                        </div>
-                    </div>
-
-                    <div class="two-column-fields">
-                        <div class="form-group">
-                            <label for="purchasePrice">
-                                Purchase price
-                                <span>*</span>
-                            </label>
-
-                            <div class="input-control">
-                                <i class="fa-solid fa-indian-rupee-sign"></i>
-
-                                <input type="number"
-                                       id="purchasePrice"
-                                       th:field="*{purchasePrice}"
-                                       placeholder="0.00"
-                                       min="0.01"
-                                       step="0.01"
-                                       required>
-                            </div>
-                        </div>
 
                         <div class="form-group">
                             <label for="currentPrice">
@@ -224,7 +187,7 @@
                                        required>
                             </div>
                         </div>
-                    </div>
+
                 </section>
 
                 <footer class="form-footer">
@@ -253,41 +216,6 @@
             </form>
 
         </div>
-
-        <aside class="value-preview">
-            <div class="preview-heading">
-                <span>Live preview</span>
-                <i class="fa-solid fa-chart-line"></i>
-            </div>
-
-            <h2>Position overview</h2>
-            <p>Values update as you complete the form.</p>
-
-            <div class="preview-main-value">
-                <span>Current value</span>
-                <strong id="previewCurrentValue">₹0.00</strong>
-            </div>
-
-            <div class="preview-row">
-                <span>Invested value</span>
-                <strong id="previewInvestedValue">₹0.00</strong>
-            </div>
-
-            <div class="preview-row">
-                <span>Profit / loss</span>
-                <strong id="previewProfitLoss">₹0.00</strong>
-            </div>
-
-            <div class="preview-row">
-                <span>Return</span>
-                <strong id="previewReturn">0.00%</strong>
-            </div>
-
-            <div class="preview-note">
-                <i class="fa-solid fa-circle-info"></i>
-                Profit and loss are calculated from current and purchase prices.
-            </div>
-        </aside>
 
     </section>
 

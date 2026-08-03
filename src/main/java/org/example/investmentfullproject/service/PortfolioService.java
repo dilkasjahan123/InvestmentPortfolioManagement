@@ -2,6 +2,7 @@ package org.example.investmentfullproject.service;
 
 import org.example.investmentfullproject.model.Asset;
 import org.example.investmentfullproject.model.Portfolio;
+import org.example.investmentfullproject.model.Role;
 import org.example.investmentfullproject.model.User;
 import org.example.investmentfullproject.repository.AssetRepository;
 import org.example.investmentfullproject.repository.PortfolioRepository;
@@ -34,9 +35,8 @@ public class PortfolioService {
         portfolio.setInvestor(investor);
         portfolio.setPortfolioId(null);
 
-        if (portfolio.getTotalValue() == null) {
-            portfolio.setTotalValue(BigDecimal.ZERO);
-        }
+        portfolio.setPortfolioName(portfolio.getPortfolioName().trim());
+        portfolio.setTotalValue(BigDecimal.ZERO);
 
         return portfolioRepository.save(portfolio);
     }
@@ -81,7 +81,7 @@ public class PortfolioService {
 
         if (!assets.isEmpty()) {
             throw new RuntimeException(
-                    "Cannot delete portfolio. Remove associated assets first.");
+                    "Cannot delete portfolio because it contains asset history.");
         }
 
         portfolioRepository.delete(portfolio);
@@ -113,8 +113,16 @@ public class PortfolioService {
             throw new RuntimeException("Please select an investor.");
         }
 
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Investor Not Found"));
+        User investor = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new RuntimeException("Investor Not Found"));
+
+        if (investor.getRole() != Role.INVESTOR) {
+            throw new RuntimeException(
+                    "Selected user is not an investor.");
+        }
+
+        return investor;
     }
 
     private void validatePortfolio(Portfolio portfolio) {

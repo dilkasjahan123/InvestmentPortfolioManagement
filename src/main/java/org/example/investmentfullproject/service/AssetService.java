@@ -6,6 +6,7 @@ import org.example.investmentfullproject.repository.AssetRepository;
 import org.example.investmentfullproject.repository.PortfolioRepository;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,6 +28,7 @@ public class AssetService {
         this.portfolioRepository = portfolioRepository;
     }
 
+    @Transactional
     public Asset addAsset(Asset asset) {
         validateAsset(asset);
 
@@ -36,6 +38,8 @@ public class AssetService {
         asset.setAssetId(null);
         asset.setPortfolio(portfolio);
         asset.setAssetName(asset.getAssetName().trim());
+        asset.setQuantity(0);
+        asset.setPurchasePrice(BigDecimal.ZERO);
         asset.setActive(true);
 
         Asset savedAsset = assetRepository.save(asset);
@@ -44,6 +48,7 @@ public class AssetService {
         return savedAsset;
     }
 
+    @Transactional
     public Asset updateAsset(Asset submittedAsset) {
         validateAsset(submittedAsset);
 
@@ -61,8 +66,6 @@ public class AssetService {
         existingAsset.setPortfolio(selectedPortfolio);
         existingAsset.setAssetName(submittedAsset.getAssetName().trim());
         existingAsset.setAssetType(submittedAsset.getAssetType());
-        existingAsset.setQuantity(submittedAsset.getQuantity());
-        existingAsset.setPurchasePrice(submittedAsset.getPurchasePrice());
         existingAsset.setCurrentPrice(submittedAsset.getCurrentPrice());
 
         Asset updatedAsset = assetRepository.save(existingAsset);
@@ -102,6 +105,7 @@ public class AssetService {
                 assetRepository.findByActiveTrueAndPortfolioInvestorUserId(userId));
     }
 
+    @Transactional
     public void deleteAsset(Integer assetId) {
         Asset asset = getActiveAssetById(assetId);
         Integer portfolioId = asset.getPortfolio().getPortfolioId();
@@ -139,15 +143,6 @@ public class AssetService {
             throw new RuntimeException("Please select an asset type.");
         }
 
-        if (asset.getQuantity() == null || asset.getQuantity() <= 0) {
-            throw new RuntimeException("Quantity must be greater than zero.");
-        }
-
-        if (asset.getPurchasePrice() == null
-                || asset.getPurchasePrice().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException(
-                    "Purchase price must be greater than zero.");
-        }
 
         if (asset.getCurrentPrice() == null
                 || asset.getCurrentPrice().compareTo(BigDecimal.ZERO) <= 0) {
