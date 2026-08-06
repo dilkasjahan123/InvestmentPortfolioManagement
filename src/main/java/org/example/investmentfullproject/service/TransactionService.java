@@ -107,7 +107,9 @@ public class TransactionService {
         }
         return transactionRepository.findTop5ByOrderByTransactionDateDesc();
     }
-
+    public long getTransactionCount() {
+        return transactionRepository.count();
+    }
     public BigDecimal getTotalBuy(User loggedUser) {
         return getTotalByType(loggedUser, "BUY");
     }

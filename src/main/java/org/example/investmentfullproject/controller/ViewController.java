@@ -9,6 +9,7 @@ import org.example.investmentfullproject.model.User;
 import org.example.investmentfullproject.service.AssetService;
 import org.example.investmentfullproject.service.AuthService;
 import org.example.investmentfullproject.service.PortfolioService;
+import org.example.investmentfullproject.service.TransactionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -36,14 +37,16 @@ public class ViewController {
     private final AuthService authService;
     private final PortfolioService portfolioService;
     private final AssetService assetService;
+    private final TransactionService transactionService;
 
     public ViewController(
             AuthService authService,
             PortfolioService portfolioService,
-            AssetService assetService) {
+            AssetService assetService, TransactionService transactionService) {
         this.authService = authService;
         this.portfolioService = portfolioService;
         this.assetService = assetService;
+        this.transactionService = transactionService;
     }
 
     @GetMapping("/")
@@ -130,7 +133,7 @@ public class ViewController {
         model.addAttribute("investorCount", investorCount);
         model.addAttribute("portfolioCount", portfolios.size());
         model.addAttribute("assetCount", assets.size());
-        model.addAttribute("transactionCount", 156);
+        model.addAttribute("transactionCount", transactionService.getTransactionCount());
         model.addAttribute("totalInvested", totalInvested);
         model.addAttribute(
                 "totalCurrentValue",
