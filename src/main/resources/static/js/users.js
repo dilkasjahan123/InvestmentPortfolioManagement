@@ -7,10 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const noResults = document.getElementById("noResults");
     const userRows = Array.from(document.querySelectorAll(".user-row"));
 
+    // Close mobile sidebar
     function closeSidebar() {
         document.body.classList.remove("sidebar-open");
     }
 
+    // Filter users by search text and role
     function filterUsers() {
         const searchValue = (searchInput?.value || "").trim().toLowerCase();
         const selectedRole = roleFilter?.value || "ALL";
@@ -39,14 +41,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Toggle sidebar on mobile
     menuButton?.addEventListener("click", () => {
         document.body.classList.toggle("sidebar-open");
     });
 
     sidebarOverlay?.addEventListener("click", closeSidebar);
+    // Filter while typing
     searchInput?.addEventListener("input", filterUsers);
+    // Filter by selected role
     roleFilter?.addEventListener("change", filterUsers);
 
+    // Confirm user deletion
     document.querySelectorAll(".delete-form").forEach(form => {
         form.addEventListener("submit", event => {
             const button = form.querySelector(".delete-button");
@@ -61,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Reset sidebar when desktop layout is restored
     window.addEventListener("resize", () => {
         if (window.innerWidth > 900) {
             closeSidebar();

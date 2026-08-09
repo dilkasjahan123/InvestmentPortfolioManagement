@@ -49,6 +49,7 @@ public class ViewController {
         this.transactionService = transactionService;
     }
 
+    // Display login page
     @GetMapping("/")
     public String loginPage(
             @RequestParam(
@@ -68,12 +69,14 @@ public class ViewController {
         return "login";
     }
 
+    // Display registration page
     @GetMapping("/register")
     public String registerPage(Model model) {
         model.addAttribute("user", new User());
         return "register";
     }
 
+    // Admin dashboard
     @GetMapping("/admin")
     public String adminPage(
             HttpSession session,
@@ -165,6 +168,7 @@ public class ViewController {
         return "admin";
     }
 
+    // Advisor dashboard
     @GetMapping("/advisor")
     public String advisorPage(
             HttpSession session,
@@ -408,6 +412,7 @@ public class ViewController {
         return "advisor-dashboard";
     }
 
+    // Investor dashboard
     @GetMapping("/investor")
     public String investorPage(
             HttpSession session,
@@ -627,6 +632,7 @@ public class ViewController {
         return "investor-dashboard";
     }
 
+    // User profile page
     @GetMapping("/profile")
     public String profilePage(
             HttpSession session,
@@ -642,6 +648,7 @@ public class ViewController {
         return "profile";
     }
 
+    // Logout user and clear session
     @RequestMapping(
             value = "/logout",
             method = {
@@ -653,6 +660,7 @@ public class ViewController {
         return "redirect:/";
     }
 
+    // Display all users (Admin only)
     @GetMapping("/users")
     public String usersPage(
             HttpSession session,
@@ -704,6 +712,7 @@ public class ViewController {
         return "users";
     }
 
+    // Delete selected user
     @PostMapping("/user/delete/{id}")
     public String deleteUser(
             @PathVariable Integer id,
@@ -752,10 +761,12 @@ public class ViewController {
         return "redirect:/users";
     }
 
+    // Get currently logged-in user from session
     private User getLoggedUser(HttpSession session) {
         return (User) session.getAttribute("loggedUser");
     }
 
+    // Calculate asset value
     private BigDecimal calculateValue(
             BigDecimal price,
             Integer quantity) {
@@ -768,6 +779,7 @@ public class ViewController {
                 BigDecimal.valueOf(quantity));
     }
 
+    // Calculate percentage value
     private BigDecimal calculatePercentage(
             BigDecimal value,
             BigDecimal total) {
@@ -785,6 +797,7 @@ public class ViewController {
                         RoundingMode.HALF_UP);
     }
 
+    // Calculate risk distribution percentage
     private BigDecimal calculateCountPercentage(
             long count,
             int total) {
@@ -801,6 +814,7 @@ public class ViewController {
                         RoundingMode.HALF_UP);
     }
 
+    // Count portfolios by risk level
     private long countRisk(
             List<Portfolio> portfolios,
             RiskLevel riskLevel) {

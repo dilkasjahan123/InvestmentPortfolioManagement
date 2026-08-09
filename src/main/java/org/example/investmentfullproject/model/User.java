@@ -7,11 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Table(name = "user")
 public class User {
 
+    // Primary key
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
     private Integer userId;
 
+    // Unique username
     @Column(unique = true)
     private String username;
 
@@ -20,6 +22,7 @@ public class User {
 
     private String email;
 
+    // User role (ADMIN, ADVISOR, INVESTOR)
     @Enumerated(EnumType.STRING)
     private Role role;
 

@@ -14,18 +14,21 @@
           rel="stylesheet">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="auth.css" th:href="@{/css/auth.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
 </head>
 
-<body class="auth-page register-page">
+<body class="auth-page">
 
+<!-- Background decorative elements -->
 <div class="ambient-shape shape-one"></div>
 <div class="ambient-shape shape-two"></div>
 <div class="ambient-grid"></div>
 
+<!-- Main registration page layout -->
 <main class="auth-shell register-shell">
 
-    <section class="auth-showcase register-showcase">
+    <!-- Left side branding and information section -->
+    <section class="auth-showcase">
         <a class="auth-brand" th:href="@{/}">
             <span class="brand-symbol">
                 <i class="fa-solid fa-chart-line"></i>
@@ -52,6 +55,7 @@
                 designed for your role.
             </p>
 
+            <!-- Account role preview cards -->
             <div class="role-preview">
                 <article>
                     <span class="role-preview-icon investor">
@@ -88,6 +92,7 @@
         </div>
     </section>
 
+    <!-- Registration form section -->
     <section class="auth-form-panel">
         <div class="mobile-brand">
             <span class="brand-symbol">
@@ -97,7 +102,7 @@
         </div>
 
         <div class="auth-card register-card">
-            <div class="auth-heading register-heading">
+            <div class="auth-heading">
                 <span class="welcome-icon">
                     <i class="fa-solid fa-user-plus"></i>
                 </span>
@@ -106,6 +111,7 @@
                 <p>Complete the details below to create your workspace.</p>
             </div>
 
+            <!-- Success message from server -->
             <div th:if="${success}"
                  class="server-alert success-alert"
                  role="status"
@@ -115,6 +121,7 @@
                 <span th:text="${success}">Account created successfully.</span>
             </div>
 
+            <!-- Error message from server -->
             <div th:if="${error}"
                  class="server-alert error-alert"
                  role="alert"
@@ -124,6 +131,7 @@
                 <span th:text="${error}">Unable to create account.</span>
             </div>
 
+            <!-- User registration form -->
             <form class="auth-form"
                   id="registerForm"
                   th:action="@{/register}"
@@ -131,6 +139,7 @@
                   method="post"
                   novalidate>
 
+                <!-- Username and email fields -->
                 <div class="registration-grid">
                     <div class="field-group">
                         <label for="username">Username</label>
@@ -168,6 +177,7 @@
                     </div>
                 </div>
 
+                <!-- User role selection -->
                 <div class="field-group">
                     <label for="role">Choose your account role</label>
                     <div class="field-control select-field">
@@ -186,6 +196,7 @@
                            role="alert"></small>
                 </div>
 
+                <!-- Password fields -->
                 <div class="registration-grid">
                     <div class="field-group">
                         <label for="password">Password</label>
@@ -233,6 +244,7 @@
                     </div>
                 </div>
 
+                <!-- Password requirement indicators -->
                 <div class="password-checklist" aria-label="Password requirements">
                     <span data-requirement="length">
                         <i class="fa-solid fa-circle"></i>
@@ -252,12 +264,14 @@
                     </span>
                 </div>
 
+                <!-- Submit registration button -->
                 <button type="submit" class="primary-auth-button" id="registerButton">
                     <span>Create account</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </form>
 
+            <!-- Link to login page -->
             <p class="switch-auth-copy">
                 Already have an account?
                 <a th:href="@{/}">

@@ -23,6 +23,7 @@
 
 <div class="dashboard-app">
 
+    <!-- Sidebar navigation -->
     <aside class="dashboard-sidebar"
            id="dashboardSidebar">
 
@@ -42,6 +43,7 @@
             Workspace
         </div>
 
+        <!-- Primary navigation -->
         <nav class="sidebar-navigation"
              aria-label="Investor navigation">
 
@@ -87,6 +89,7 @@
             Account
         </div>
 
+        <!-- Account navigation -->
         <nav class="sidebar-navigation"
              aria-label="Account navigation">
             <a th:href="@{/profile}">
@@ -97,6 +100,7 @@
             </a>
         </nav>
 
+        <!-- Sidebar footer -->
         <div class="sidebar-footer">
             <div class="sidebar-user">
                 <div class="sidebar-avatar">
@@ -125,10 +129,12 @@
 
     </aside>
 
+    <!-- Mobile sidebar overlay -->
     <div class="sidebar-overlay"
          id="sidebarOverlay">
     </div>
 
+    <!-- Main dashboard content -->
     <main class="dashboard-main">
 
         <header class="topbar">
@@ -171,6 +177,7 @@
 
         <div class="dashboard-content">
 
+            <!-- Portfolio summary hero section -->
             <section class="welcome-panel">
                 <div class="welcome-copy">
                     <span class="welcome-badge">
@@ -284,6 +291,7 @@
                 </div>
             </section>
 
+            <!-- Investment statistics -->
             <section class="stats-grid"
                      aria-label="Investment summary">
 
@@ -353,8 +361,10 @@
 
             </section>
 
+            <!-- Portfolio insights -->
             <section class="insights-grid">
 
+                <!-- Portfolio allocation -->
                 <article class="insight-card allocation-card">
                     <header class="card-heading">
                         <div>
@@ -418,6 +428,7 @@
                     </div>
                 </article>
 
+                <!-- Risk distribution -->
                 <article class="insight-card risk-card">
                     <header class="card-heading">
                         <div>
@@ -490,6 +501,7 @@
 
             </section>
 
+            <!-- Portfolio overview -->
             <section class="portfolio-section">
 
                 <header class="section-header">
@@ -523,6 +535,7 @@
                     </div>
                 </header>
 
+                <!-- Empty state -->
                 <div th:if="${#lists.isEmpty(portfolios)}"
                      class="empty-state">
                     <div class="empty-icon">
@@ -541,9 +554,11 @@
                     </a>
                 </div>
 
+                <!-- Portfolio cards -->
                 <div class="portfolio-grid"
                      th:unless="${#lists.isEmpty(portfolios)}">
 
+                    <!-- Portfolio card -->
                     <article class="portfolio-card"
                              th:each="portfolio : ${portfolios}">
 

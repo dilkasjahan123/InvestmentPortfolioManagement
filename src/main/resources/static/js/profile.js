@@ -9,10 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const confirmPassword = document.getElementById("confirmPassword");
     const clientPasswordError = document.getElementById("clientPasswordError");
 
+    // Close mobile sidebar
     function closeSidebar() {
         document.body.classList.remove("sidebar-open");
     }
 
+    // Show validation message
     function showPasswordError(message) {
         if (!clientPasswordError) {
             return;
@@ -22,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         clientPasswordError.hidden = false;
     }
 
+    // Clear validation message
     function clearPasswordError() {
         if (!clientPasswordError) {
             return;
@@ -37,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     sidebarOverlay?.addEventListener("click", closeSidebar);
 
+    // Toggle password change section
     passwordToggle?.addEventListener("click", () => {
         const isOpening = passwordSection?.hasAttribute("hidden");
 
@@ -51,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Toggle password visibility
     document.querySelectorAll("[data-password-target]").forEach(button => {
         button.addEventListener("click", () => {
             const targetId = button.dataset.passwordTarget;
@@ -72,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Validate password fields before submit
     profileForm?.addEventListener("submit", event => {
         clearPasswordError();
 

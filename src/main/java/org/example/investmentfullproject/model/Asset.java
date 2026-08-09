@@ -113,6 +113,7 @@ public class Asset {
         this.active = active;
     }
 
+    // Calculate total invested amount
     @Transient
     public BigDecimal getInvestedValue() {
         if (purchasePrice == null || quantity == null) {
@@ -122,6 +123,7 @@ public class Asset {
         return purchasePrice.multiply(BigDecimal.valueOf(quantity));
     }
 
+    // Calculate current market value
     @Transient
     public BigDecimal getCurrentValue() {
         if (currentPrice == null || quantity == null) {
@@ -131,11 +133,13 @@ public class Asset {
         return currentPrice.multiply(BigDecimal.valueOf(quantity));
     }
 
+    // Calculate unrealized profit or loss
     @Transient
     public BigDecimal getProfitLoss() {
         return getCurrentValue().subtract(getInvestedValue());
     }
 
+    // Determine whether the asset is profitable
     @Transient
     public boolean isProfitable() {
         return getProfitLoss().compareTo(BigDecimal.ZERO) >= 0;

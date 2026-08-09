@@ -11,11 +11,14 @@ import java.util.List;
 @Service
 public class AuthService {
 
+    // Handles user database operations
     @Autowired
     private UserRepository userRepository;
 
+    // Register a new user
     public User registerUser(User user) {
 
+        // Check if username already exists
         if(userRepository
                 .findByUsername(user.getUsername())
                 .isPresent()) {
@@ -25,6 +28,7 @@ public class AuthService {
             );
         }
 
+        // Prevent admin self-registration
         if(user.getRole() == Role.ADMIN) {
 
             throw new RuntimeException(
@@ -35,10 +39,12 @@ public class AuthService {
         return userRepository.save(user);
     }
 
+    // Validate user login credentials
     public User login(
             String username,
             String password) {
 
+        // Find user by username
         User user =
                 userRepository
                         .findByUsername(username)
@@ -46,6 +52,7 @@ public class AuthService {
                                 new RuntimeException(
                                         "Invalid Username"));
 
+        // Verify password
         if (!user.getPassword().equals(password)) {
 
             throw new RuntimeException(
@@ -55,6 +62,7 @@ public class AuthService {
         return user;
     }
 
+    // Get user details by ID
     public User getUserProfile(
             Integer id) {
 
@@ -64,27 +72,23 @@ public class AuthService {
                         new RuntimeException(
                                 "User Not Found"));
     }
+
+    // Fetch all users
     public List<User> getAllUsers() {
 
         return userRepository.findAll();
     }
 
+    // Delete user by ID
     public void deleteUser(Integer id) {
 
         userRepository.deleteById(id);
     }
-    public Long getUserCount() {
 
-        return userRepository.count();
-    }
+    // Update user profile information
     public User updateProfile(
             User user,
             String currentPassword){
-
-        System.out.println(
-                "Received Password: "
-                        + user.getPassword()
-        );
 
         User existingUser =
                 userRepository.findById(

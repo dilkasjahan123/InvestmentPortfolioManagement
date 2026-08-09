@@ -25,6 +25,7 @@
 
 <main class="dashboard-shell">
 
+    <!-- Page header -->
     <header class="dashboard-header">
 
         <div class="brand-section">
@@ -85,6 +86,7 @@
 
     </div>
 
+    <!-- Portfolio statistics -->
     <section class="stats-grid" aria-label="Portfolio statistics">
 
         <article class="stat-card stat-total">
@@ -137,6 +139,7 @@
 
     </section>
 
+    <!-- Portfolio directory -->
     <section class="content-panel">
 
         <div class="content-toolbar">
@@ -165,6 +168,7 @@
 
         </div>
 
+        <!-- Empty state -->
         <div th:if="${#lists.isEmpty(portfolios)}"
              class="empty-state">
 
@@ -191,6 +195,7 @@
 
         </div>
 
+        <!-- Portfolios grouped by investor -->
         <div class="investor-groups"
              th:unless="${#lists.isEmpty(portfolios)}">
 
@@ -240,6 +245,7 @@
 
                 </header>
 
+                <!-- Portfolio card -->
                 <div class="portfolio-grid">
 
                     <article class="portfolio-card"

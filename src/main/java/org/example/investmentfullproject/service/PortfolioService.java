@@ -28,6 +28,7 @@ public class PortfolioService {
         this.assetRepository = assetRepository;
     }
 
+    // Create a new portfolio
     public Portfolio createPortfolio(Portfolio portfolio) {
         validatePortfolio(portfolio);
 
@@ -41,6 +42,7 @@ public class PortfolioService {
         return portfolioRepository.save(portfolio);
     }
 
+    // Update an existing portfolio
     public Portfolio updatePortfolio(Portfolio submittedPortfolio) {
         validatePortfolio(submittedPortfolio);
 
@@ -74,6 +76,7 @@ public class PortfolioService {
         return portfolioRepository.findByInvestorUserId(userId);
     }
 
+    // Delete portfolio only when no assets exist
     public void deletePortfolio(Integer portfolioId) {
         Portfolio portfolio = getPortfolioById(portfolioId);
         List<Asset> assets =
@@ -87,6 +90,7 @@ public class PortfolioService {
         portfolioRepository.delete(portfolio);
     }
 
+    // Recalculate portfolio value from active assets
     public void updatePortfolioValue(Integer portfolioId) {
         Portfolio portfolio = getPortfolioById(portfolioId);
         List<Asset> assets =
@@ -102,12 +106,7 @@ public class PortfolioService {
         portfolioRepository.save(portfolio);
     }
 
-    public void recalculateAllPortfolioValues() {
-        portfolioRepository.findAll()
-                .forEach(portfolio ->
-                        updatePortfolioValue(portfolio.getPortfolioId()));
-    }
-
+    // Validate selected investor account
     private User findInvestor(Integer userId) {
         if (userId == null) {
             throw new RuntimeException("Please select an investor.");
@@ -125,6 +124,7 @@ public class PortfolioService {
         return investor;
     }
 
+    // Validate portfolio form data
     private void validatePortfolio(Portfolio portfolio) {
         if (portfolio.getPortfolioName() == null
                 || portfolio.getPortfolioName().isBlank()) {
@@ -135,7 +135,8 @@ public class PortfolioService {
             throw new RuntimeException("Risk level is required.");
         }
 
-        if (portfolio.getInvestor() == null) {
+        if (portfolio.getInvestor() == null
+                || portfolio.getInvestor().getUserId() == null) {
             throw new RuntimeException("Please select an investor.");
         }
     }

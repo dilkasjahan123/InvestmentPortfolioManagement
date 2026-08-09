@@ -1,3 +1,4 @@
+// Portfolio search filtering
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("searchPortfolio");
 
@@ -5,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    // Filter investors and portfolios based on search text
     searchInput.addEventListener("input", () => {
         const searchTerm = searchInput.value.trim().toLowerCase();
 

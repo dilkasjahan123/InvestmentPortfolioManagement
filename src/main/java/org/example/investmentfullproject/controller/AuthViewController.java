@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+// Handles login, registration and profile actions
 @Controller
 public class AuthViewController {
 
@@ -17,6 +18,7 @@ public class AuthViewController {
         this.authService = authService;
     }
 
+    // Process user login
     @PostMapping("/login")
     public String login(
             User user,
@@ -52,6 +54,7 @@ public class AuthViewController {
         }
     }
 
+    // Process user registration
     @PostMapping("/register")
     public String register(
             User user,
@@ -69,6 +72,7 @@ public class AuthViewController {
         }
     }
 
+    // Update user profile
     @PostMapping("/profile/update")
     public String updateProfile(
             User submittedUser,

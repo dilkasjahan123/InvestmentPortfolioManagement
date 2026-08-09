@@ -1,9 +1,9 @@
+/* Theme colors */
 :root {
     --background: #f4f7fb;
     --surface: #ffffff;
     --surface-soft: #f8fafc;
     --navy: #0b1220;
-    --navy-soft: #172033;
     --text: #172033;
     --muted: #667085;
     --border: #e5eaf1;
@@ -12,12 +12,12 @@
     --blue: #2563eb;
     --emerald: #059669;
     --amber: #d97706;
-    --rose: #e11d48;
     --violet: #7c3aed;
     --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
     --shadow-md: 0 14px 34px rgba(15, 23, 42, 0.08);
 }
 
+/* Global reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -28,6 +28,7 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Base page styles */
 body {
     min-width: 320px;
     min-height: 100vh;
@@ -47,10 +48,12 @@ a {
     text-decoration: none;
 }
 
+/* Application layout */
 .app-shell {
     min-height: 100vh;
 }
 
+/* Sidebar navigation */
 .sidebar {
     position: fixed;
     inset: 0 auto 0 0;
@@ -102,6 +105,7 @@ a {
     font-size: 11px;
 }
 
+/* Navigation menu */
 .side-nav {
     flex: 1;
 }

@@ -31,9 +31,11 @@
     </ul>
 </nav>
 
+<!-- Success and error messages -->
 <p class="success" th:if="${success}" th:text="${success}"></p>
 <p class="failed" th:if="${error}" th:text="${error}"></p>
 
+<!-- Quick transaction actions -->
 <section class="cards" th:if="${canTrade}">
     <div class="card">
         <h3>Buy Asset</h3>
@@ -63,6 +65,7 @@
     </div>
 </section>
 
+<!-- Transaction summary -->
 <section class="summary">
     <div class="summary-card">
         <h3>Total Buy</h3>
@@ -80,6 +83,7 @@
     </div>
 </section>
 
+<!-- Recent transaction history -->
 <section class="table-section">
     <h2>Recent Transactions</h2>
 

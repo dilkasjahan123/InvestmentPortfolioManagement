@@ -55,6 +55,7 @@
 
 <main class="page-container">
 
+    <!-- Page header -->
     <section class="page-heading">
         <div>
             <p class="eyebrow">Investment inventory</p>
@@ -84,6 +85,7 @@
         <span th:text="${error}">Something went wrong.</span>
     </div>
 
+    <!-- Asset summary -->
     <section class="summary-grid" aria-label="Asset summary">
 
         <article class="summary-card summary-assets">
@@ -176,6 +178,7 @@
 
     </section>
 
+    <!-- Asset directory -->
     <section class="assets-panel">
 
         <div class="panel-toolbar">
@@ -200,6 +203,7 @@
             </div>
         </div>
 
+        <!-- Empty state -->
         <div th:if="${#lists.isEmpty(assets)}"
              class="empty-state">
             <div class="empty-icon">
@@ -222,9 +226,11 @@
             </a>
         </div>
 
+        <!-- Assets grouped by portfolio -->
         <div class="portfolio-groups"
              th:unless="${#lists.isEmpty(assets)}">
 
+            <!-- Portfolio asset group -->
             <section class="portfolio-group"
                      th:each="assetEntry : ${assetsByPortfolio}">
 
@@ -282,6 +288,7 @@
 
                 <div class="asset-grid">
 
+                    <!-- Asset card -->
                     <article class="asset-card"
                              th:each="asset : ${assetEntry.value}">
 

@@ -35,6 +35,7 @@ public class PortfolioViewController {
         this.authService = authService;
     }
 
+    // Portfolio management dashboard
     @GetMapping("/portfolios")
     public String portfolios(HttpSession session, Model model) {
         User loggedUser = getLoggedUser(session);
@@ -93,6 +94,7 @@ public class PortfolioViewController {
         return "portfolio";
     }
 
+    // Display create portfolio form
     @GetMapping("/portfolio/add")
     public String addPortfolioPage(HttpSession session, Model model) {
         User loggedUser = getLoggedUser(session);
@@ -118,6 +120,7 @@ public class PortfolioViewController {
         return "portfolio-form";
     }
 
+    // Save new portfolio
     @PostMapping("/portfolio/save")
     public String savePortfolio(
             @ModelAttribute("portfolio") Portfolio portfolio,
@@ -150,6 +153,7 @@ public class PortfolioViewController {
         }
     }
 
+    // Display edit portfolio form
     @GetMapping("/portfolio/edit/{id}")
     public String editPortfolio(
             @PathVariable Integer id,
@@ -184,6 +188,7 @@ public class PortfolioViewController {
         }
     }
 
+    // Update portfolio
     @PostMapping("/portfolio/update")
     public String updatePortfolio(
             @ModelAttribute("portfolio") Portfolio submittedPortfolio,
@@ -225,6 +230,7 @@ public class PortfolioViewController {
         return "redirect:/portfolios";
     }
 
+    // Delete portfolio
     @PostMapping("/portfolio/delete/{id}")
     public String deletePortfolio(
             @PathVariable Integer id,
@@ -260,6 +266,7 @@ public class PortfolioViewController {
         return "redirect:/portfolios";
     }
 
+    // Populate common form attributes
     private void prepareForm(
             Model model,
             User loggedUser,
@@ -282,6 +289,7 @@ public class PortfolioViewController {
         return (User) session.getAttribute("loggedUser");
     }
 
+    // Check whether user can modify portfolio
     private boolean canModify(User loggedUser, Portfolio portfolio) {
         return loggedUser.getRole() == Role.ADMIN
                 || (loggedUser.getRole() == Role.INVESTOR

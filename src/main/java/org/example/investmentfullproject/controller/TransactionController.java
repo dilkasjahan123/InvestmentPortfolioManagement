@@ -28,6 +28,7 @@ public class TransactionController {
         this.assetService = assetService;
     }
 
+    // Transaction dashboard
     @GetMapping
     public String transactionPage(HttpSession session, Model model) {
         User loggedUser = getLoggedUser(session);
@@ -56,6 +57,7 @@ public class TransactionController {
         return "Transaction";
     }
 
+    // Buy selected asset
     @PostMapping("/buy")
     public String buyAsset(
             @ModelAttribute Transaction transaction,
@@ -80,6 +82,7 @@ public class TransactionController {
         }
     }
 
+    // Sell selected asset
     @PostMapping("/sell")
     public String sellAsset(
             @ModelAttribute Transaction transaction,
@@ -113,6 +116,7 @@ public class TransactionController {
                 : transactionService.getAllTransactions(loggedUser);
     }
 
+    // Transaction history page
     @GetMapping({"/history", "/transaction-history"})
     public String transactionHistory(HttpSession session, Model model) {
         User loggedUser = getLoggedUser(session);
@@ -137,6 +141,7 @@ public class TransactionController {
         return prepareTradePage(session, model, "SellAsset");
     }
 
+    // Prepare buy/sell form data
     private String prepareTradePage(
             HttpSession session,
             Model model,

@@ -12,14 +12,16 @@
           rel="stylesheet">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="admin.css" th:href="@{/css/admin.css}">
-    <link rel="stylesheet" href="profile.css" th:href="@{/css/profile.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
 </head>
 
 <body>
 
+<!-- Main application layout -->
 <div class="app-shell">
 
+    <!-- Sidebar navigation -->
     <aside class="sidebar" id="sidebar">
         <a class="brand"
            th:href="${user.role.name() == 'ADMIN' ? '/admin'
@@ -122,8 +124,10 @@
     <button class="sidebar-overlay" id="sidebarOverlay"
             type="button" aria-label="Close navigation"></button>
 
+    <!-- Main content area -->
     <main class="main-content">
 
+        <!-- Top navigation -->
         <header class="topbar">
             <button class="menu-button" id="menuButton"
                     type="button" aria-label="Open navigation">
@@ -168,8 +172,10 @@
             </div>
         </header>
 
+        <!-- Profile page content -->
         <div class="page-content profile-page">
 
+            <!-- Status messages -->
             <div th:if="${success}" class="alert success-alert" role="status">
                 <i class="fa-solid fa-circle-check"></i>
                 <span th:text="${success}">Profile updated successfully.</span>
@@ -180,8 +186,10 @@
                 <span th:text="${error}">Unable to update profile.</span>
             </div>
 
+            <!-- Profile layout -->
             <section class="profile-layout">
 
+                <!-- User identity summary -->
                 <aside class="identity-panel">
                     <div class="identity-cover"></div>
 
@@ -233,6 +241,7 @@
                     </div>
                 </aside>
 
+                <!-- Profile settings form -->
                 <section class="settings-panel">
                     <div class="settings-heading">
                         <div>
@@ -318,6 +327,7 @@
                             <i class="fa-solid fa-chevron-down toggle-chevron"></i>
                         </button>
 
+                        <!-- Password update section -->
                         <div class="password-section" id="passwordSection" hidden>
                             <div class="password-grid">
                                 <div class="form-group full-width">
@@ -389,6 +399,7 @@
                             </div>
                         </div>
 
+                        <!-- Form actions -->
                         <div class="form-actions">
                             <a th:if="${user.role.name() == 'ADMIN'}"
                                th:href="@{/admin}"

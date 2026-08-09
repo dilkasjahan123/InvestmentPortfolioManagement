@@ -91,11 +91,12 @@ a {
 
 .nav-container {
     display: grid;
-    grid-template-columns: Minimax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     width: min(1400px, calc(100% - 48px));
     min-height: 72px;
     margin: 0 auto;
+
 }
 
 .site-brand,

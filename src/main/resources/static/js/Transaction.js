@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    // Automatically display selected asset price
     const updatePrice = () => {
         const selectedOption =
             assetSelect.options[assetSelect.selectedIndex];
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePrice();
 });
 
+// Validate common transaction inputs
 function validateTransactionForm() {
     const assetId = document.getElementById("assetId").value;
     const quantity = Number(document.getElementById("quantity").value);
@@ -39,10 +41,12 @@ function validateTransactionForm() {
     return true;
 }
 
+// Validate buy transaction
 function validateBuy() {
     return validateTransactionForm();
 }
 
+// Validate sell transaction
 function validateSellForm() {
     return validateTransactionForm();
 }

@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeAssetSearch();
 });
 
+// Asset search and filtering
 function initializeAssetSearch() {
     const searchInput = document.getElementById("assetSearch");
 
@@ -9,6 +10,7 @@ function initializeAssetSearch() {
         return;
     }
 
+// Filter portfolio groups and assets based on search text
     searchInput.addEventListener("input", () => {
         const searchTerm = searchInput.value.trim().toLowerCase();
 

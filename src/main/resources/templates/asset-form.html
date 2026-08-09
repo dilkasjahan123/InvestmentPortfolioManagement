@@ -23,20 +23,24 @@
 
 <body>
 
+<!-- Background effects -->
 <div class="page-glow glow-left"></div>
 <div class="page-glow glow-right"></div>
 
 <main class="asset-form-page">
 
+    <!-- Back navigation -->
     <a th:href="@{/assets}" class="back-link">
         <i class="fa-solid fa-arrow-left"></i>
         Back to assets
     </a>
 
+    <!-- Asset form container -->
     <section class="form-layout">
 
         <div class="form-card">
 
+            <!-- Form header -->
             <header class="form-header">
                 <div class="form-header-icon">
                     <i class="fa-solid fa-cube"></i>
@@ -60,6 +64,7 @@
                 </div>
             </header>
 
+            <!-- Validation error message -->
             <div th:if="${error}"
                  class="alert alert-error form-alert"
                  role="alert">
@@ -67,6 +72,7 @@
                 <span th:text="${error}">Something went wrong.</span>
             </div>
 
+            <!-- Asset form -->
             <form th:action="@{${formAction}}"
                   th:object="${asset}"
                   method="post"
@@ -74,6 +80,7 @@
 
                 <input type="hidden" th:field="*{assetId}">
 
+                <!-- Basic asset information -->
                 <section class="form-section">
                     <div class="section-title">
                         <span>01</span>
@@ -158,6 +165,7 @@
                     </div>
                 </section>
 
+                <!-- Asset pricing information -->
                 <section class="form-section">
                     <div class="section-title">
                         <span>02</span>
@@ -190,6 +198,7 @@
 
                 </section>
 
+                <!-- Form actions -->
                 <footer class="form-footer">
                     <p>
                         <i class="fa-solid fa-shield-halved"></i>

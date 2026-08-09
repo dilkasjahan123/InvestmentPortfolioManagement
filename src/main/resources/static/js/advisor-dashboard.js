@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeInvestorSearch();
 });
 
+// Mobile sidebar controls
 function initializeAdvisorSidebar() {
     const menuButton =
             document.getElementById("menuButton");
@@ -49,6 +50,7 @@ function initializeAdvisorSidebar() {
     });
 }
 
+// Investor search and filtering
 function initializeInvestorSearch() {
     const searchInput =
             document.getElementById("investorSearch");

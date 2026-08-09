@@ -33,6 +33,7 @@ public class PerformanceReportViewController {
         this.portfolioService = portfolioService;
     }
 
+    // Performance analytics dashboard
     @GetMapping({
             "/performance-report",
             "/performance-reports"
@@ -119,6 +120,7 @@ public class PerformanceReportViewController {
         return "performance-report";
     }
 
+    // Generate a new portfolio performance report
     @PostMapping("/performance-report/generate/{portfolioId}")
     public String generateReport(
             @PathVariable Integer portfolioId,
@@ -157,6 +159,7 @@ public class PerformanceReportViewController {
         return "redirect:/performance-report?portfolioId=" + portfolioId;
     }
 
+    // Retrieve portfolios accessible to the current user
     private List<Portfolio> getAccessiblePortfolios(
             User loggedUser,
             Integer investorId) {
@@ -180,6 +183,7 @@ public class PerformanceReportViewController {
         return portfolios;
     }
 
+    // Select requested portfolio
     private Portfolio selectPortfolio(
             List<Portfolio> portfolios,
             Integer portfolioId) {
@@ -195,6 +199,7 @@ public class PerformanceReportViewController {
                 .orElse(null);
     }
 
+    // Verify portfolio access permissions
     private boolean canAccess(User user, Portfolio portfolio) {
         return user.getRole() != Role.INVESTOR
                 || (portfolio.getInvestor() != null
@@ -202,6 +207,7 @@ public class PerformanceReportViewController {
                 portfolio.getInvestor().getUserId()));
     }
 
+    // Retrieve logged-in user from session
     private User getLoggedUser(HttpSession session) {
         return (User) session.getAttribute("loggedUser");
     }

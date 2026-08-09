@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
     const loginButton = document.getElementById("loginButton");
 
+    // Toggle password visibility
     document.querySelectorAll("[data-password-target]").forEach(button => {
         button.addEventListener("click", () => {
             const input = document.getElementById(button.dataset.passwordTarget);
@@ -22,13 +23,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Validate form before submission
     loginForm?.addEventListener("submit", event => {
+        // Check required fields
         if (!loginForm.checkValidity()) {
             event.preventDefault();
             loginForm.reportValidity();
             return;
         }
 
+        // Prevent multiple submissions and show loading state
         if (loginButton) {
             loginButton.disabled = true;
             loginButton.setAttribute("aria-busy", "true");

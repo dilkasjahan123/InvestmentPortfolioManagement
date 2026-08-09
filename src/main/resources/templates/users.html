@@ -18,8 +18,10 @@
 
 <body>
 
+<!-- Main application layout -->
 <div class="app-shell">
 
+    <!-- Sidebar navigation -->
     <aside class="sidebar" id="sidebar">
         <a class="brand" th:href="@{/admin}">
             <span class="brand-mark">
@@ -31,6 +33,7 @@
             </span>
         </a>
 
+        <!-- Main navigation menu -->
         <nav class="side-nav" aria-label="Main navigation">
             <p class="nav-label">Workspace</p>
 
@@ -72,6 +75,7 @@
             </a>
         </nav>
 
+        <!-- Current user and logout section -->
         <div class="sidebar-footer">
             <div class="sidebar-user">
                 <span class="avatar"
@@ -90,11 +94,14 @@
         </div>
     </aside>
 
+    <!-- Mobile navigation overlay -->
     <button class="sidebar-overlay" id="sidebarOverlay"
             type="button" aria-label="Close navigation"></button>
 
+    <!-- Main content area -->
     <main class="main-content">
 
+        <!-- Top navigation bar -->
         <header class="topbar">
             <button class="menu-button" id="menuButton"
                     type="button" aria-label="Open navigation">
@@ -124,8 +131,10 @@
             </div>
         </header>
 
+        <!-- User management content -->
         <div class="page-content users-page">
 
+            <!-- Page header -->
             <section class="page-heading">
                 <div>
                     <span class="heading-icon">
@@ -144,16 +153,19 @@
                 </a>
             </section>
 
+            <!-- Success message -->
             <div th:if="${success}" class="alert success-alert" role="status">
                 <i class="fa-solid fa-circle-check"></i>
                 <span th:text="${success}">Success</span>
             </div>
 
+            <!-- Error message -->
             <div th:if="${error}" class="alert error-alert" role="alert">
                 <i class="fa-solid fa-circle-exclamation"></i>
                 <span th:text="${error}">Error</span>
             </div>
 
+            <!-- User statistics -->
             <section class="user-stats" aria-label="Account statistics">
                 <article class="user-stat-card">
                     <span class="user-stat-icon all">
@@ -200,6 +212,7 @@
                 </article>
             </section>
 
+            <!-- User directory -->
             <section class="directory-panel">
                 <div class="directory-toolbar">
                     <div>
@@ -210,6 +223,7 @@
                         </p>
                     </div>
 
+                    <!-- Search and filter controls -->
                     <div class="directory-filters">
                         <label class="search-control" for="searchUser">
                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -232,6 +246,7 @@
                 </div>
 
                 <div class="table-wrap">
+                    <!-- User account table -->
                     <table class="user-table">
                         <thead>
                         <tr>
@@ -244,6 +259,7 @@
                         </thead>
 
                         <tbody id="userTableBody">
+                        <!-- User row -->
                         <tr th:each="account : ${users}"
                             class="user-row"
                             data-role="INVESTOR"
@@ -314,6 +330,7 @@
                     </table>
                 </div>
 
+                <!-- Empty search result state -->
                 <div class="no-results" id="noResults" hidden>
                     <span>
                         <i class="fa-solid fa-user-slash"></i>

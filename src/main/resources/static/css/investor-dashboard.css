@@ -1,3 +1,4 @@
+/* Theme variables */
 :root {
     --background: #f5f7fb;
     --surface: #ffffff;
@@ -9,7 +10,6 @@
     --sidebar: #10172a;
     --sidebar-muted: #8d98b3;
     --primary: #4f46e5;
-    --primary-dark: #3730a3;
     --primary-soft: #eef2ff;
     --success: #059669;
     --success-soft: #ecfdf5;
@@ -24,6 +24,7 @@
     --shadow-lg: 0 25px 65px rgba(30, 41, 59, 0.14);
 }
 
+/* Base styles */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -1226,6 +1227,7 @@ a {
     outline-offset: 2px;
 }
 
+/* Tablet layout */
 @media (max-width: 1120px) {
     .stats-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1240,6 +1242,7 @@ a {
     }
 }
 
+/* Mobile layout */
 @media (max-width: 900px) {
     .dashboard-sidebar {
         transform: translateX(-100%);
@@ -1277,6 +1280,7 @@ a {
     }
 }
 
+/* Small screen layout */
 @media (max-width: 760px) {
     .topbar {
         padding: 0 18px;

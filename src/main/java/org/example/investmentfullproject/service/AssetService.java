@@ -28,6 +28,7 @@ public class AssetService {
         this.portfolioRepository = portfolioRepository;
     }
 
+    // Create a new active asset
     @Transactional
     public Asset addAsset(Asset asset) {
         validateAsset(asset);
@@ -48,6 +49,7 @@ public class AssetService {
         return savedAsset;
     }
 
+    // Update an existing active asset
     @Transactional
     public Asset updateAsset(Asset submittedAsset) {
         validateAsset(submittedAsset);
@@ -80,6 +82,7 @@ public class AssetService {
         return updatedAsset;
     }
 
+    // Retrieve an active asset by ID
     public Asset getActiveAssetById(Integer assetId) {
         Asset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new RuntimeException("Asset not found."));
@@ -91,20 +94,18 @@ public class AssetService {
         return asset;
     }
 
-    public List<Asset> getAssetsByPortfolio(Integer portfolioId) {
-        return sortAssets(
-                assetRepository.findByPortfolioPortfolioIdAndActiveTrue(portfolioId));
-    }
-
+    // Get all active assets
     public List<Asset> getAllAssets() {
         return sortAssets(assetRepository.findByActiveTrue());
     }
 
+    // Get active assets belonging to an investor
     public List<Asset> getAssetsByInvestor(Integer userId) {
         return sortAssets(
                 assetRepository.findByActiveTrueAndPortfolioInvestorUserId(userId));
     }
 
+    // Mark asset as inactive and update portfolio value
     @Transactional
     public void deleteAsset(Integer assetId) {
         Asset asset = getActiveAssetById(assetId);
@@ -116,10 +117,7 @@ public class AssetService {
         portfolioService.updatePortfolioValue(portfolioId);
     }
 
-    public long getAssetCount() {
-        return assetRepository.countByActiveTrue();
-    }
-
+    // Validate selected portfolio
     private Portfolio findPortfolio(Integer portfolioId) {
         if (portfolioId == null) {
             throw new RuntimeException("Please select a portfolio.");
@@ -129,6 +127,7 @@ public class AssetService {
                 .orElseThrow(() -> new RuntimeException("Portfolio not found."));
     }
 
+    // Validate asset form data
     private void validateAsset(Asset asset) {
         if (asset.getAssetName() == null || asset.getAssetName().isBlank()) {
             throw new RuntimeException("Asset name is required.");
@@ -151,6 +150,7 @@ public class AssetService {
         }
     }
 
+    // Sort assets by investor, portfolio and asset name
     private List<Asset> sortAssets(List<Asset> assets) {
         List<Asset> sortedAssets = new ArrayList<>(assets);
 

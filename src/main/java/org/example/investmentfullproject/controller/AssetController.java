@@ -36,6 +36,7 @@ public class AssetController {
         this.portfolioService = portfolioService;
     }
 
+    // Asset management dashboard
     @GetMapping("/assets")
     public String assets(HttpSession session, Model model) {
         User loggedUser = getLoggedUser(session);
@@ -99,6 +100,7 @@ public class AssetController {
         return "asset";
     }
 
+    // Display asset creation form
     @GetMapping("/assets/add")
     public String addAssetPage(
             HttpSession session,
@@ -126,6 +128,7 @@ public class AssetController {
         return "asset-form";
     }
 
+    // Save new asset
     @PostMapping("/assets/save")
     public String saveAsset(
             @ModelAttribute("asset") Asset asset,
@@ -159,6 +162,7 @@ public class AssetController {
         }
     }
 
+    // Display asset update form
     @GetMapping("/assets/edit/{id}")
     public String editAssetPage(
             @PathVariable Integer id,
@@ -193,6 +197,7 @@ public class AssetController {
         }
     }
 
+    // Update existing asset
     @PostMapping("/assets/update")
     public String updateAsset(
             @ModelAttribute("asset") Asset asset,
@@ -226,6 +231,7 @@ public class AssetController {
         }
     }
 
+    // Soft-delete asset
     @PostMapping("/assets/delete/{id}")
     public String deleteAsset(
             @PathVariable Integer id,
@@ -254,6 +260,7 @@ public class AssetController {
         return "redirect:/assets";
     }
 
+    // Populate shared form attributes
     private void prepareForm(
             Model model,
             User loggedUser,
@@ -285,6 +292,7 @@ public class AssetController {
         model.addAttribute("portfolios", portfolios);
     }
 
+    // Retrieve logged-in user from session
     private User getLoggedUser(HttpSession session) {
         return (User) session.getAttribute("loggedUser");
     }

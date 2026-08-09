@@ -1,3 +1,4 @@
+// Initialize analytics charts
 document.addEventListener("DOMContentLoaded", function () {
     var data = window.performanceReportData;
 
@@ -5,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
+    // Asset allocation pie chart
     var allocationCanvas = document.getElementById("allocationChart");
     var allocationEmpty = document.getElementById("allocationEmpty");
 
@@ -25,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         allocationCanvas.style.display = "none";
     }
 
+    // Return history line chart
     var historyCanvas = document.getElementById("historyChart");
     var historyEmpty = document.getElementById("historyEmpty");
 

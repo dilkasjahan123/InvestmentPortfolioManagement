@@ -31,6 +31,7 @@ public class TransactionService {
         this.portfolioService = portfolioService;
     }
 
+    // Buy asset units and update portfolio value
     @Transactional
     public void buyAsset(Transaction transaction, User loggedUser) {
         if (transaction == null || transaction.getAssetId() == null) {
@@ -65,6 +66,7 @@ public class TransactionService {
                 asset.getPortfolio().getPortfolioId());
     }
 
+    // Sell asset units and update portfolio value
     @Transactional
     public void sellAsset(Transaction transaction, User loggedUser) {
         if (transaction == null || transaction.getAssetId() == null) {
@@ -110,14 +112,18 @@ public class TransactionService {
     public long getTransactionCount() {
         return transactionRepository.count();
     }
+
+    // Calculate total buy amount
     public BigDecimal getTotalBuy(User loggedUser) {
         return getTotalByType(loggedUser, "BUY");
     }
 
+    // Calculate total sell amount
     public BigDecimal getTotalSell(User loggedUser) {
         return getTotalByType(loggedUser, "SELL");
     }
 
+    // Calculate successful transaction percentage
     public double getSuccessRate(User loggedUser) {
         long total;
         long success;
@@ -138,6 +144,7 @@ public class TransactionService {
         return total == 0 ? 0 : (success * 100.0) / total;
     }
 
+    // Save completed transaction record
     private void saveTransaction(
             Transaction transaction,
             Asset asset,
@@ -150,6 +157,7 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
+    // Verify user access to selected asset
     private Asset findAccessibleAsset(Integer assetId, User loggedUser) {
         if (loggedUser == null) {
             throw new IllegalArgumentException(
@@ -177,6 +185,7 @@ public class TransactionService {
         return asset;
     }
 
+    // Validate transaction request
     private void validateTransaction(Transaction transaction) {
         if (transaction == null || transaction.getAssetId() == null) {
             throw new IllegalArgumentException("Please select an asset.");

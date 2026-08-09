@@ -18,13 +18,15 @@
 </head>
 
 <body class="auth-page">
-
+<!-- Background decorative elements -->
 <div class="ambient-shape shape-one"></div>
 <div class="ambient-shape shape-two"></div>
 <div class="ambient-grid"></div>
 
+<!-- Main login page layout -->
 <main class="auth-shell">
 
+    <!-- Left side branding and feature section -->
     <section class="auth-showcase">
         <a class="auth-brand" th:href="@{/}">
             <span class="brand-symbol">
@@ -52,6 +54,7 @@
                 and the people behind every investment decision.
             </p>
 
+            <!-- Application feature highlights -->
             <div class="feature-list">
                 <div class="feature-item">
                     <span class="feature-icon blue">
@@ -98,6 +101,7 @@
         </div>
     </section>
 
+    <!-- Login form section -->
     <section class="auth-form-panel">
         <div class="mobile-brand">
             <span class="brand-symbol">
@@ -116,6 +120,7 @@
                 <p>Enter your account details to continue to InvestFlow.</p>
             </div>
 
+            <!-- Success message from server -->
             <div th:if="${success}"
                  class="server-alert success-alert"
                  role="status"
@@ -125,6 +130,7 @@
                 <span th:text="${success}">Registration completed successfully.</span>
             </div>
 
+            <!-- Error message from server -->
             <div th:if="${error}"
                  class="server-alert error-alert"
                  role="alert"
@@ -134,12 +140,14 @@
                 <span th:text="${error}">Unable to sign in.</span>
             </div>
 
+            <!-- User login form -->
             <form class="auth-form"
                   id="loginForm"
                   th:action="@{/login}"
                   th:object="${user}"
                   method="post">
 
+                <!-- Username input field -->
                 <div class="field-group">
                     <label for="username">Username</label>
                     <div class="field-control">
@@ -154,6 +162,7 @@
                     </div>
                 </div>
 
+                <!-- Password input field -->
                 <div class="field-group">
                     <div class="field-label-row">
                         <label for="password">Password</label>
@@ -177,6 +186,7 @@
                     </div>
                 </div>
 
+                <!-- Role selection -->
                 <div class="field-group">
                     <label for="role">Account role</label>
                     <div class="field-control select-field">
@@ -198,6 +208,7 @@
                     <span>Select the same role assigned to your registered account.</span>
                 </div>
 
+                <!-- Login button -->
                 <button type="submit" class="primary-auth-button" id="loginButton">
                     <span>Sign in</span>
                     <i class="fa-solid fa-arrow-right"></i>
@@ -208,18 +219,15 @@
                 <span>New to InvestFlow?</span>
             </div>
 
+            <!-- Registration link -->
             <a class="secondary-auth-button" th:href="@{/register}">
                 Create an account
                 <i class="fa-solid fa-user-plus"></i>
             </a>
-
-            <p class="terms-copy">
-                By continuing, you agree to use this training application responsibly.
-            </p>
         </div>
     </section>
 </main>
 
-<script src="login.js" th:src="@{/js/login.js}"></script>
+<script th:src="@{/js/login.js}"></script>
 </body>
 </html>

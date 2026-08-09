@@ -34,17 +34,20 @@ public class AnalyticsService {
         this.performanceReportRepository = performanceReportRepository;
     }
 
+    // Calculate portfolio return percentage
     public Double getPortfolioPerformance(Integer portfolioId) {
         return getAnalytics(portfolioId)
                 .returnPercentage()
                 .doubleValue();
     }
 
+    // Calculate portfolio risk score
     public Double getRiskScore(Integer portfolioId) {
         return calculateRiskScore(requirePortfolio(portfolioId))
                 .doubleValue();
     }
 
+    // Build portfolio analytics summary
     public PortfolioAnalytics getAnalytics(Integer portfolioId) {
         Portfolio portfolio = requirePortfolio(portfolioId);
         List<Asset> assets =
@@ -77,6 +80,7 @@ public class AnalyticsService {
                 allocationByType);
     }
 
+    // Create and save performance report snapshot
     public PerformanceReport generateReport(Integer portfolioId) {
         PortfolioAnalytics analytics = getAnalytics(portfolioId);
 
@@ -89,6 +93,7 @@ public class AnalyticsService {
         return performanceReportRepository.save(report);
     }
 
+    // Retrieve report history for a portfolio
     public List<PerformanceReport> getReportsByPortfolio(
             Integer portfolioId) {
         requirePortfolio(portfolioId);
@@ -97,12 +102,14 @@ public class AnalyticsService {
                         portfolioId);
     }
 
+    // Validate and retrieve portfolio
     private Portfolio requirePortfolio(Integer portfolioId) {
         return portfolioRepository.findById(portfolioId)
                 .orElseThrow(() ->
                         new RuntimeException("Portfolio Not Found"));
     }
 
+    // Convert risk level to numeric score
     private BigDecimal calculateRiskScore(Portfolio portfolio) {
         RiskLevel riskLevel = portfolio.getRiskLevel();
 
@@ -117,6 +124,7 @@ public class AnalyticsService {
         };
     }
 
+    // Calculate allocation percentage by asset type
     private Map<String, BigDecimal> calculateAllocation(
             List<Asset> assets,
             BigDecimal totalCurrentValue) {
@@ -143,6 +151,7 @@ public class AnalyticsService {
         return allocation;
     }
 
+    // Calculate percentage value
     private BigDecimal percentage(
             BigDecimal value,
             BigDecimal total) {

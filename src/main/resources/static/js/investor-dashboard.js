@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initializePortfolioSearch();
 });
 
+// Mobile sidebar controls
 function initializeSidebar() {
     const menuButton =
             document.getElementById("menuButton");
@@ -49,6 +50,7 @@ function initializeSidebar() {
     });
 }
 
+// Portfolio search filtering
 function initializePortfolioSearch() {
     const searchInput =
             document.getElementById("portfolioSearch");

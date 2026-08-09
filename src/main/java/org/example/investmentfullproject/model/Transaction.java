@@ -114,16 +114,12 @@ public class Transaction {
         this.price = price;
     }
 
+    // Calculate transaction amount (price × quantity)
     @Transient
     public BigDecimal getTotalAmount() {
         if (price == null || quantity == null) {
             return BigDecimal.ZERO;
         }
         return price.multiply(BigDecimal.valueOf(quantity));
-    }
-
-    @Transient
-    public LocalTime getTransactionTime() {
-        return transactionDate == null ? null : transactionDate.toLocalTime();
     }
 }

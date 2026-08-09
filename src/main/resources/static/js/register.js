@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         number: value => /\d/.test(value)
     };
 
+    // Display validation error message
     function setError(input, errorId, message) {
         const error = document.getElementById(errorId);
         const fieldControl = input?.closest(".field-control");
@@ -25,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fieldControl?.classList.toggle("invalid", Boolean(message));
     }
 
+    // Update password strength checklist
     function updatePasswordChecklist() {
         const value = password?.value || "";
 
@@ -36,10 +38,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Check if password meets all requirements
     function passwordIsValid(value) {
         return Object.values(requirements).every(test => test(value));
     }
 
+    // Toggle password visibility
     document.querySelectorAll("[data-password-target]").forEach(button => {
         button.addEventListener("click", () => {
             const input = document.getElementById(button.dataset.passwordTarget);
@@ -60,10 +64,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Clear username validation error while typing
     username?.addEventListener("input", () => {
         setError(username, "usernameError", "");
     });
 
+    // Clear email validation error while typing
     email?.addEventListener("input", () => {
         setError(email, "emailError", "");
     });
@@ -81,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setError(confirmPassword, "confirmPasswordError", "");
     });
 
+    // Validate form before submission
     registerForm?.addEventListener("submit", event => {
         let isValid = true;
         const usernameValue = username?.value.trim() || "";
@@ -147,6 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Disable button to prevent duplicate submission
         if (registerButton) {
             registerButton.disabled = true;
             registerButton.setAttribute("aria-busy", "true");
