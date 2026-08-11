@@ -76,20 +76,12 @@ public class AuthViewController {
             BindingResult bindingResult,
             Model model) {
 
-        System.out.println("REGISTER HIT");
-
         if (bindingResult.hasErrors()) {
 
-            System.out.println("VALIDATION FAILED");
-
-            model.addAttribute(
-                    "user",
-                    user);
+            model.addAttribute("user", user);
 
             return "register";
         }
-
-        System.out.println("VALIDATION PASSED");
 
         try {
 
@@ -99,9 +91,7 @@ public class AuthViewController {
 
         } catch (RuntimeException exception) {
 
-            model.addAttribute(
-                    "user",
-                    user);
+            model.addAttribute("user", user);
 
             model.addAttribute(
                     "error",
@@ -110,6 +100,7 @@ public class AuthViewController {
             return "register";
         }
     }
+
 
     // Update user profile
     @PostMapping("/profile/update")
