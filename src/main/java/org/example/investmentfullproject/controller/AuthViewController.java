@@ -1,10 +1,12 @@
 package org.example.investmentfullproject.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.example.investmentfullproject.model.User;
 import org.example.investmentfullproject.service.AuthService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,25 +33,38 @@ public class AuthViewController {
                     user.getPassword());
 
             if (loggedUser.getRole() != user.getRole()) {
+
                 model.addAttribute("user", user);
                 model.addAttribute(
                         "error",
                         "Selected role does not match account role");
+
                 return "login";
             }
 
-            session.setAttribute("loggedUser", loggedUser);
+            session.setAttribute(
+                    "loggedUser",
+                    loggedUser);
 
             return switch (loggedUser.getRole()) {
-                case ADMIN -> "redirect:/admin";
-                case ADVISOR -> "redirect:/advisor";
-                case INVESTOR -> "redirect:/investor";
+
+                case ADMIN ->
+                        "redirect:/admin";
+
+                case ADVISOR ->
+                        "redirect:/advisor";
+
+                case INVESTOR ->
+                        "redirect:/investor";
             };
+
         } catch (RuntimeException exception) {
+
             model.addAttribute("user", user);
             model.addAttribute(
                     "error",
                     exception.getMessage());
+
             return "login";
         }
     }
@@ -57,17 +72,41 @@ public class AuthViewController {
     // Process user registration
     @PostMapping("/register")
     public String register(
-            User user,
+            @Valid User user,
+            BindingResult bindingResult,
             Model model) {
 
+        System.out.println("REGISTER HIT");
+
+        if (bindingResult.hasErrors()) {
+
+            System.out.println("VALIDATION FAILED");
+
+            model.addAttribute(
+                    "user",
+                    user);
+
+            return "register";
+        }
+
+        System.out.println("VALIDATION PASSED");
+
         try {
+
             authService.registerUser(user);
+
             return "redirect:/?registered=true";
+
         } catch (RuntimeException exception) {
-            model.addAttribute("user", user);
+
+            model.addAttribute(
+                    "user",
+                    user);
+
             model.addAttribute(
                     "error",
                     exception.getMessage());
+
             return "register";
         }
     }
@@ -82,28 +121,46 @@ public class AuthViewController {
             Model model) {
 
         User loggedUser =
-                (User) session.getAttribute("loggedUser");
+                (User) session.getAttribute(
+                        "loggedUser");
 
         if (loggedUser == null) {
             return "redirect:/";
         }
 
-        submittedUser.setUserId(loggedUser.getUserId());
-        submittedUser.setRole(loggedUser.getRole());
+        submittedUser.setUserId(
+                loggedUser.getUserId());
+
+        submittedUser.setRole(
+                loggedUser.getRole());
 
         try {
-            User updatedUser = authService.updateProfile(
-                    submittedUser,
-                    currentPassword);
 
-            session.setAttribute("loggedUser", updatedUser);
-            model.addAttribute("user", updatedUser);
+            User updatedUser =
+                    authService.updateProfile(
+                            submittedUser,
+                            currentPassword);
+
+            session.setAttribute(
+                    "loggedUser",
+                    updatedUser);
+
+            model.addAttribute(
+                    "user",
+                    updatedUser);
+
             model.addAttribute(
                     "success",
                     "Profile updated successfully.");
+
         } catch (RuntimeException exception) {
+
             submittedUser.setPassword(null);
-            model.addAttribute("user", submittedUser);
+
+            model.addAttribute(
+                    "user",
+                    submittedUser);
+
             model.addAttribute(
                     "error",
                     exception.getMessage());

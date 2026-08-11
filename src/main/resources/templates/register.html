@@ -158,6 +158,11 @@
                         <small class="field-error"
                                id="usernameError"
                                role="alert"></small>
+
+                        <small style="color:#dc2626"
+                               th:if="${#fields.hasErrors('username')}"
+                               th:errors="*{username}">
+                        </small>
                     </div>
 
                     <div class="field-group">
@@ -174,6 +179,11 @@
                         <small class="field-error"
                                id="emailError"
                                role="alert"></small>
+
+                        <small style="color:#dc2626"
+                               th:if="${#fields.hasErrors('email')}"
+                               th:errors="*{email}">
+                        </small>
                     </div>
                 </div>
 
@@ -219,6 +229,10 @@
                         <small class="field-error"
                                id="passwordError"
                                role="alert"></small>
+                        <small style="color: #dc2626;"
+                               th:if="${#fields.hasErrors('password')}"
+                               th:errors="*{password}">
+                        </small>
                     </div>
 
                     <div class="field-group">

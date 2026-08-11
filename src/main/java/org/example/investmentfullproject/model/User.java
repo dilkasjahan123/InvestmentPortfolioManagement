@@ -1,6 +1,9 @@
 package org.example.investmentfullproject.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -14,12 +17,27 @@ public class User {
     private Integer userId;
 
     // Unique username
+    @NotBlank(message = "Username is required")
+    @Size(
+            min = 3,
+            max = 20,
+            message = "Username must be between 3 and 20 characters"
+    )
     @Column(unique = true)
     private String username;
 
+    // Password
+    @NotBlank(message = "Password is required")
+    @Size(
+            min = 6,
+            message = "Password must be at least 6 characters long"
+    )
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    // Email
+    @NotBlank(message = "Email is required")
+    @Email(message = "Please enter a valid email address")
     private String email;
 
     // User role (ADMIN, ADVISOR, INVESTOR)
